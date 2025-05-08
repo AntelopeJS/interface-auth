@@ -3,7 +3,7 @@
 # Interface Auth
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.md)
-[![Version](https://img.shields.io/badge/version-dev-orange.svg)](https://github.com/antelopejs/antelope)
+[![Version](https://img.shields.io/badge/version-beta-orange.svg)](https://github.com/antelopejs/antelope)
 
 A flexible, decorator-based framework for implementing authentication and authorization in TypeScript. Interface Auth simplifies securing API endpoints, validating user credentials, and managing user sessions with a clean, declarative syntax.
 
