@@ -1,6 +1,6 @@
 {
   "name": "@antelopejs/interface-auth",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "AntelopeJS interface for JWT authentication and session management",
   "keywords": [
     "antelopejs",
