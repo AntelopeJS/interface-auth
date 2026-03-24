@@ -9,31 +9,31 @@ export default defineConfig({
   modules: {
     "auth-jwt": {
       source: {
-        type: "local",
-        path: "../auth-jwt",
-        installCommand: ["pnpm install", "npx tsc"],
+        type: "package",
+        package: "@antelopejs/auth-jwt",
+        version: "1.0.0",
       },
       config: { secret: "test-secret-key-for-jwt" },
     },
     mongodb: {
       source: {
-        type: "local",
-        path: "../mongodb",
-        installCommand: ["pnpm install", "npx tsc"],
+        type: "package",
+        package: "@antelopejs/mongodb",
+        version: "1.0.0",
       },
     },
     database_decorators: {
       source: {
-        type: "local",
-        path: "../database-decorators",
-        installCommand: ["pnpm install", "npx tsc"],
+        type: "package",
+        package: "@antelopejs/database-decorators",
+        version: "1.0.0",
       },
     },
     api: {
       source: {
-        type: "local",
-        path: "../api",
-        installCommand: ["pnpm install", "npx tsc"],
+        type: "package",
+        package: "@antelopejs/api",
+        version: "1.0.0",
       },
       config: {
         servers: [{ protocol: "http", host: "127.0.0.1", port: 5010 }],
