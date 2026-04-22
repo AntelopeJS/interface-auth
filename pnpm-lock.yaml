@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@antelopejs/interface-api':
-        specifier: ^0.0.2
-        version: 0.0.2
+        specifier: ^0.0.3
+        version: 0.0.3
       '@antelopejs/interface-core':
         specifier: ^0.0.3
         version: 0.0.3
@@ -51,11 +51,8 @@ importers:
 
 packages:
 
-  '@antelopejs/interface-api@0.0.2':
-    resolution: {integrity: sha512-wD9kODuc5cns8mCVv4hLL3N8eF2iXtXoMgtDS7zJ3hZZoPnlpxZ7mDP4fMRUDBl0pm9ZTPKb5abzu3BZg6T/EA==}
-
-  '@antelopejs/interface-core@0.0.2':
-    resolution: {integrity: sha512-CmtOJvSCRj20GOQhrE0PpHybGaW1G1lrepiKHVJa/bclhrvFYgHV0MH84TMpMOHESQT/+wuup007tfXAwaI+Eg==}
+  '@antelopejs/interface-api@0.0.3':
+    resolution: {integrity: sha512-64UrrttRAjA1LsXwDskh/UVcXDFpH2+gxJHCT+F8YGLPDJE1XzVUW6/YeG441J+zsFJTnaU6Vlt90TwWumcpCA==}
 
   '@antelopejs/interface-core@0.0.3':
     resolution: {integrity: sha512-Kw3ffGiQHKJ88AqdFfPuwzl+v0w6QqzqiqnLY7M0MYYw+YwdRNXh5WAJkep0ePudR9leLGXPU//FYizNaDG6yw==}
@@ -1373,13 +1370,9 @@ packages:
 
 snapshots:
 
-  '@antelopejs/interface-api@0.0.2':
+  '@antelopejs/interface-api@0.0.3':
     dependencies:
-      '@antelopejs/interface-core': 0.0.2
-
-  '@antelopejs/interface-core@0.0.2':
-    dependencies:
-      reflect-metadata: 0.2.2
+      '@antelopejs/interface-core': 0.0.3
 
   '@antelopejs/interface-core@0.0.3':
     dependencies:
