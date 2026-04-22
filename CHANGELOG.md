@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.0.4
+
+[compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.0.3...v0.0.4)
+
+### 🏡 Chore
+
+- Bump @antelopejs/interface-api to ^0.0.3 ([d7109a9](https://github.com/AntelopeJS/interface-auth/commit/d7109a9))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli <upd4ting@gmail.com>
+
 ## v0.0.3
 
 [compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.0.2...v0.0.3)
