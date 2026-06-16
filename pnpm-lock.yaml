@@ -7,14 +7,13 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@antelopejs/interface-api':
-        specifier: ^0.0.3
-        version: 0.0.3
-      '@antelopejs/interface-core':
-        specifier: ^0.0.3
-        version: 0.0.3
     devDependencies:
+      '@antelopejs/interface-api':
+        specifier: ^0.0.5
+        version: 0.0.5(@antelopejs/interface-core@0.0.5)
+      '@antelopejs/interface-core':
+        specifier: ^0.0.5
+        version: 0.0.5
       '@biomejs/biome':
         specifier: 2.3.2
         version: 2.3.2
@@ -51,11 +50,13 @@ importers:
 
 packages:
 
-  '@antelopejs/interface-api@0.0.3':
-    resolution: {integrity: sha512-64UrrttRAjA1LsXwDskh/UVcXDFpH2+gxJHCT+F8YGLPDJE1XzVUW6/YeG441J+zsFJTnaU6Vlt90TwWumcpCA==}
+  '@antelopejs/interface-api@0.0.5':
+    resolution: {integrity: sha512-BApviHE1vVkORDWtC8x8N2xCxBdFZZnhgMlxDuUmlXz2fGlYqBX1inIQQrEyOY31Zc/WN7nJpcA0zjjwk7Sp9A==}
+    peerDependencies:
+      '@antelopejs/interface-core': '>=0.0.3 <1.0.0'
 
-  '@antelopejs/interface-core@0.0.3':
-    resolution: {integrity: sha512-Kw3ffGiQHKJ88AqdFfPuwzl+v0w6QqzqiqnLY7M0MYYw+YwdRNXh5WAJkep0ePudR9leLGXPU//FYizNaDG6yw==}
+  '@antelopejs/interface-core@0.0.5':
+    resolution: {integrity: sha512-4H6hpFfiK2+DE8vL2mEtPbq1WNch9lt40QNr9KjBrOAtnuq/zMfIlzhbEsda39m+FVkMWXfUYoVolRogVKCLIQ==}
 
   '@biomejs/biome@2.3.2':
     resolution: {integrity: sha512-8e9tzamuDycx7fdrcJ/F/GDZ8SYukc5ud6tDicjjFqURKYFSWMl0H0iXNXZEGmcmNUmABgGuHThPykcM41INgg==}
@@ -1370,11 +1371,11 @@ packages:
 
 snapshots:
 
-  '@antelopejs/interface-api@0.0.3':
+  '@antelopejs/interface-api@0.0.5(@antelopejs/interface-core@0.0.5)':
     dependencies:
-      '@antelopejs/interface-core': 0.0.3
+      '@antelopejs/interface-core': 0.0.5
 
-  '@antelopejs/interface-core@0.0.3':
+  '@antelopejs/interface-core@0.0.5':
     dependencies:
       reflect-metadata: 0.2.2
 
