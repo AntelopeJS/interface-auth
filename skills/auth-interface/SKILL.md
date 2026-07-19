@@ -71,7 +71,7 @@ Declare `"antelopeJs": { "implements": ["@antelopejs/interface-auth"] }` in the 
 
 ## Gotchas
 
-- `SignRaw` / `ValidateRaw` / `SignServerResponse` are interface proxy calls: they return Promises and only resolve once a provider module is attached. Calls made earlier are queued, not failed — always `await`.
+- `SignRaw` / `ValidateRaw` / `SignServerResponse` are interface proxy calls: they return Promises and only resolve once a provider module is attached. While a provider module is loaded but not yet attached, earlier calls are queued, not failed — always `await`. But when no loaded module provides the interface (e.g. a stubbed `optionalDependencies` entry), the core neutralizes the proxies and those calls reject instead of queuing.
 - Default token source (`internal.defaultSource`): the `x-antelopejs-auth` request header, falling back to the `ANTELOPEJS_AUTH` cookie. `SignServerResponse` sets that same cookie via `Set-Cookie`.
 - `@Authentication(validator?)` accepts an optional validator at the use site; it overrides any validator configured in `CreateAuthDecorator`.
 - Decorators from `CreateAuthDecorator` (including `Authentication`) apply to parameters, properties, and whole classes (class-level registers a provider for the controller) — NOT to methods; decorating a method silently registers nothing and can break other parameter decorators on that handler.
