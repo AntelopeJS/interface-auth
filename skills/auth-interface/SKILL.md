@@ -34,19 +34,19 @@ import {
 import { Controller, Get, Post } from "@antelopejs/interface-api";
 import { Authentication, SignRaw } from "@antelopejs/interface-auth";
 
-interface UserSession { id: string; role: string; }
+interface LibrarianSession { id: string; branch: string; }
 
-class UserController extends Controller("/users") {
+class LibrarianController extends Controller("/librarians") {
   @Post("login")
   async login() {
     // Sign a payload into a token (proxy call to the auth provider)
-    return SignRaw({ id: "42", role: "admin" }, { expiresIn: "1h" });
+    return SignRaw({ id: "lib-7", branch: "riverside" }, { expiresIn: "1h" });
   }
 
-  @Get("profile")
-  async getProfile(@Authentication() user: UserSession) {
+  @Get("desk")
+  async getDesk(@Authentication() librarian: LibrarianSession) {
     // Token was read from the request, verified, and injected
-    return { id: user.id, role: user.role };
+    return { id: librarian.id, branch: librarian.branch };
   }
 }
 ```
