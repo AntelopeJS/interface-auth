@@ -11,7 +11,7 @@ export default defineConfig({
       source: {
         type: "package",
         package: "@antelopejs/auth-jwt",
-        version: "1.0.0",
+        version: "1.0.3",
       },
       config: { secret: "test-secret-key-for-jwt" },
     },
@@ -19,21 +19,14 @@ export default defineConfig({
       source: {
         type: "package",
         package: "@antelopejs/mongodb",
-        version: "1.0.0",
-      },
-    },
-    database_decorators: {
-      source: {
-        type: "package",
-        package: "@antelopejs/database-decorators",
-        version: "1.0.0",
+        version: "1.2.7",
       },
     },
     api: {
       source: {
         type: "package",
         package: "@antelopejs/api",
-        version: "1.0.0",
+        version: "1.2.4",
       },
       config: {
         servers: [{ protocol: "http", host: "127.0.0.1", port: 5010 }],
@@ -47,7 +40,7 @@ export default defineConfig({
       return {
         modules: {
           mongodb: {
-            config: { url: mongod.getUri() },
+            config: { url: mongod.getUri(), database: "antelopejs_test" },
           },
         },
       };
