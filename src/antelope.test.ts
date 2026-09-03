@@ -22,13 +22,6 @@ export default defineConfig({
         version: "1.2.7",
       },
     },
-    database_decorators: {
-      source: {
-        type: "package",
-        package: "@antelopejs/database-decorators",
-        version: "1.1.1",
-      },
-    },
     api: {
       source: {
         type: "package",
@@ -47,7 +40,7 @@ export default defineConfig({
       return {
         modules: {
           mongodb: {
-            config: { url: mongod.getUri() },
+            config: { url: mongod.getUri(), database: "antelopejs_test" },
           },
         },
       };
