@@ -1,6 +1,5 @@
 # Changelog
 
-
 ## v0.0.6
 
 [compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.0.5...v0.0.6)
@@ -64,7 +63,6 @@
 
 ## v0.0.2
 
-
 ### 🚀 Enhancements
 
 - Initial interface-auth package ([b7ec0d9](https://github.com/AntelopeJS/interface-auth/commit/b7ec0d9))
@@ -85,4 +83,3 @@
 
 - Antony Rizzitelli <upd4ting@gmail.com>
 - Glastis ([@Glastis](http://github.com/Glastis))
-
