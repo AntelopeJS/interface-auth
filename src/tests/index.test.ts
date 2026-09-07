@@ -1,3 +1,4 @@
+import { expect } from "chai";
 import type { ServerResponse } from "node:http";
 import { HTTPResult } from "@antelopejs/interface-api";
 import {
@@ -5,7 +6,6 @@ import {
   SignServerResponse,
   ValidateRaw,
 } from "@antelopejs/interface-auth";
-import { expect } from "chai";
 
 interface TestUser {
   id: string;
