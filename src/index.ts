@@ -1,6 +1,6 @@
+import { InterfaceFunction } from "@antelopejs/interface-core";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { SetParameterProvider } from "@antelopejs/interface-api";
-import { InterfaceFunction } from "@antelopejs/interface-core";
 import { MakeParameterAndPropertyAndClassDecorator } from "@antelopejs/interface-core/decorators";
 
 const AuthHeaderName = "x-antelopejs-auth";

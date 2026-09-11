@@ -18,11 +18,18 @@ All symbols come from the package root (the exports map exposes no other code su
 
 ```ts
 import {
-  Authentication, CreateAuthDecorator,
-  SignRaw, ValidateRaw, SignServerResponse,
+  Authentication,
+  CreateAuthDecorator,
+  SignRaw,
+  ValidateRaw,
+  SignServerResponse,
   internal, // provider side only
-  type AuthSource, type AuthVerifier, type AuthValidator,
-  type SignOptions, type VerifyOptions, type CookieOptions,
+  type AuthSource,
+  type AuthVerifier,
+  type AuthValidator,
+  type SignOptions,
+  type VerifyOptions,
+  type CookieOptions,
 } from "@antelopejs/interface-auth";
 ```
 
@@ -34,7 +41,10 @@ import {
 import { Controller, Get, Post } from "@antelopejs/interface-api";
 import { Authentication, SignRaw } from "@antelopejs/interface-auth";
 
-interface LibrarianSession { id: string; branch: string; }
+interface LibrarianSession {
+  id: string;
+  branch: string;
+}
 
 class LibrarianController extends Controller("/librarians") {
   @Post("login")
@@ -63,7 +73,7 @@ import { internal } from "@antelopejs/interface-auth";
 
 ImplementInterface(internal, {
   Verify: (token, options) => decodeAndVerify(token, options), // return payload, throw on invalid
-  Sign: (data, options) => signToken(data, options),           // return token string
+  Sign: (data, options) => signToken(data, options), // return token string
 });
 ```
 
