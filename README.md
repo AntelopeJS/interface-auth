@@ -1,5 +1,3 @@
-![Auth](.github/social-card.png)
-
 # Interface Auth
 
 <div align="center">
