@@ -8,7 +8,4 @@ export default antelopeKnipConfig({
     "src/tests/**/*.test.ts",
     "src/antelope.test.ts",
   ],
-  // `ajs` comes from @antelopejs/core, which CI installs globally rather than
-  // pulling the whole CLI into every module's dependency tree.
-  ignoreBinaries: ["ajs"],
 });
