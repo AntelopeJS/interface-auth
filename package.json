@@ -1,13 +1,19 @@
 {
   "name": "@antelopejs/interface-auth",
   "version": "0.0.6",
-  "description": "AntelopeJS interface for JWT authentication and session management",
+  "description": "AntelopeJS interface for token authentication: sign and verify tokens and inject the verified payload into API handlers",
   "keywords": [
     "antelopejs",
     "auth",
+    "authentication",
     "interface",
-    "jwt"
+    "jwt",
+    "token"
   ],
+  "homepage": "https://interfaces.antelopejs.com/docs/auth",
+  "bugs": {
+    "url": "https://github.com/AntelopeJS/interface-auth/issues"
+  },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
