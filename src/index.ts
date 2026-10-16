@@ -64,9 +64,13 @@ export type AuthValidator<T = unknown, R = unknown> = (
 /**
  * HTTP Cookie options for controlling how authentication cookies are set.
  *
- * @property maxAge - Number of milliseconds until the cookie expires
- * @property signed - Whether the cookie should be signed
- * @property expires - Specific date when the cookie expires
+ * Keys are serialized literally. False and undefined values are omitted;
+ * true values become standalone directives, and other values use String(value).
+ * No attributes are supplied by default.
+ *
+ * @property maxAge - Serialized as maxAge, not the standard Max-Age attribute
+ * @property signed - Serialized as a directive; does not add a cookie signature
+ * @property expires - Serialized with String(date), not an HTTP-date formatter
  * @property httpOnly - Whether the cookie is only accessible via HTTP(S) and not client JavaScript
  * @property path - URL path for which the cookie is valid
  * @property domain - Domain for which the cookie is valid
@@ -77,7 +81,6 @@ export type AuthValidator<T = unknown, R = unknown> = (
  * const secureOptions: CookieOptions = {
  *   httpOnly: true,
  *   secure: true,
- *   maxAge: 3600000, // 1 hour
  *   path: '/'
  * };
  * ```
@@ -375,6 +378,8 @@ export function SignRaw(
 
 /**
  * Signs some data and attaches it to an HTTP Response object as a cookie.
+ * Replaces the Set-Cookie header with ANTELOPEJS_AUTH and the supplied attributes.
+ * Does not send or end the response. See {@link CookieOptions} for serialization limits.
  *
  * @param res - HTTP Response object to set the cookie on
  * @param data - Data to sign and attach
@@ -409,6 +414,8 @@ export function SignServerResponse(
  *
  * The callbacks are processed in the following order:
  * `source(req, res)` => `authenticator(prev, authenticatorOptions)` => `validator(prev)` => Parameter
+ * A validator must throw to deny access; its return value is injected unchanged.
+ * A validator passed to the decorator replaces the configured validator.
  *
  * @template R - The type of the final validator result
  * @template T - The type of the authenticated data before validation
@@ -417,10 +424,13 @@ export function SignServerResponse(
  * @param callbacks.authenticator - Verifies the signature
  * @param callbacks.authenticatorOptions - Options for verification
  * @param callbacks.validator - Custom validation step (overrideable with decorator call)
- * @returns A decorator for parameters, methods, properties, and classes
+ * @returns A decorator for parameters, properties, and classes
  *
  * @example
  * ```typescript
+ * import { Controller, Get } from '@antelopejs/interface-api';
+ * import { CreateAuthDecorator } from '@antelopejs/interface-auth';
+ *
  * // Create a custom auth decorator
  * const RequireAdmin = CreateAuthDecorator({
  *   validator: (user: any) => {
@@ -432,11 +442,11 @@ export function SignServerResponse(
  * });
  *
  * // Use the decorator
- * class AdminController {
- *   @Route('/admin/settings')
- *   getSettings(@RequireAdmin() user: UserProfile) {
+ * class AdminController extends Controller('/admin') {
+ *   @Get('settings')
+ *   getSettings(@RequireAdmin() user: { role: string }) {
  *     // Only admin users can access this
- *     return { settings: this.adminSettings };
+ *     return { role: user.role };
  *   }
  * }
  * ```
@@ -474,7 +484,9 @@ export function CreateAuthDecorator<R = unknown, T = unknown>(
 
 /**
  * Parameter Provider using the default source and signature verification callbacks.
- * This decorator can be applied to parameters, methods, properties, or classes to
+ * Reads the raw token from x-antelopejs-auth, falling back to ANTELOPEJS_AUTH
+ * only when the header is absent. Does not read Authorization or strip Bearer.
+ * This decorator can be applied to parameters, properties, or classes to
  * require authentication.
  *
  * @param validator - Optional custom validation callback
@@ -482,20 +494,14 @@ export function CreateAuthDecorator<R = unknown, T = unknown>(
  *
  * @example
  * ```typescript
- * class UserController {
- *   @Route('/profile')
- *   getProfile(@Authentication user: UserProfile) {
+ * import { Controller, Get } from '@antelopejs/interface-api';
+ * import { Authentication } from '@antelopejs/interface-auth';
+ *
+ * class UserController extends Controller('/users') {
+ *   @Get('profile')
+ *   getProfile(@Authentication() user: { name: string; email: string }) {
  *     // 'user' contains the authenticated user data
  *     return { name: user.name, email: user.email };
- *   }
- *
- *   @Route('/admin')
- *   adminPage(@Authentication((user) => {
- *     if (user.role !== 'admin') throw new Error('Admin only');
- *     return user;
- *   }) user: UserProfile) {
- *     // Only admins will reach this code
- *     return { adminData: this.sensitiveData };
  *   }
  * }
  * ```

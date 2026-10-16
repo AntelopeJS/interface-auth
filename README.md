@@ -13,7 +13,7 @@ The AntelopeJS contract for token authentication: sign and verify tokens, and in
 
 - `SignRaw` and `ValidateRaw` sign a payload into a token and verify a token back into its payload.
 - `SignServerResponse` signs a payload and attaches the token to a response as a cookie.
-- `@Authentication()` reads the token from the `Authorization` header or the `ANTELOPEJS_AUTH` cookie, verifies it and injects the payload into a handler parameter.
+- `@Authentication()` reads the token from the `x-antelopejs-auth` header, falling back to the `ANTELOPEJS_AUTH` cookie when the header is absent, verifies it and injects the payload into a handler parameter.
 - `CreateAuthDecorator` builds your own decorator with a custom source, verifier and validator.
 
 ## Implementations
@@ -59,22 +59,25 @@ export class SessionController extends Controller("/session") {
 }
 ```
 
-A request to `GET /session/me` without a valid token fails before the handler runs.
+A request to `GET /session/me` without a valid token fails before the handler runs. Send the token unchanged in `x-antelopejs-auth`, without a `Bearer ` prefix. The login method only demonstrates signing; validate credentials before issuing tokens in a real application.
 
 ## Documentation
 
-- [Introduction](https://interfaces.antelopejs.com/docs/auth/introduction)
-- [Authentication](https://interfaces.antelopejs.com/docs/auth/authentication)
-- [Token handling](https://interfaces.antelopejs.com/docs/auth/token-handling)
-- [Parameter decoration](https://interfaces.antelopejs.com/docs/auth/parameter-decoration)
+- [Introduction](./docs/1.introduction.md)
+- [Authentication](./docs/2.authentication.md)
+- [Token handling](./docs/3.token-handling.md)
+- [Parameter decoration](./docs/4.parameter-decoration.md)
 
 ## Compatibility
 
-| Package                             | Range             |
-| ----------------------------------- | ----------------- |
-| `@antelopejs/interface-api` (peer)  | `>=0.0.13 <1.0.0` |
-| `@antelopejs/interface-core` (peer) | `>=0.1.1 <1.0.0`  |
-| `@antelopejs/core`                  | `1.x`             |
+Use with `@antelopejs/core` 1.x and the following peer dependencies:
+
+<!-- docs-compat: ./package.json#peerDependencies -->
+
+| Package                      | Range             |
+| ---------------------------- | ----------------- |
+| `@antelopejs/interface-api`  | `>=0.0.13 <1.0.0` |
+| `@antelopejs/interface-core` | `>=0.1.1 <1.0.0`  |
 
 ## Contributing
 
