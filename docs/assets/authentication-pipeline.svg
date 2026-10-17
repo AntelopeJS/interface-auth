@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-labelledby="title desc">
+  <title id="title">Authentication: extraction, trust, policy</title>
+  <desc id="desc">A source extracts a token. An authenticator verifies it. An optional validator checks policy. Only successful processing injects the result. Throwing stops injection.</desc>
+  <rect width="480" height="480" rx="16" fill="#f5f7fb"/>
+  <g font-family="system-ui, sans-serif" fill="#172b45">
+    <text x="24" y="36" font-size="20" font-weight="700">From request to trusted input</text>
+    <rect x="24" y="58" width="432" height="84" rx="10" fill="#e1ecfa"/>
+    <text x="42" y="87" font-size="18" font-weight="700">1 · Source</text>
+    <text x="42" y="116" font-size="16">Extract the token; do not trust it yet.</text>
+    <path d="M240 148v20m-6-6 6 6 6-6" fill="none" stroke="#526780" stroke-width="2"/>
+    <rect x="24" y="176" width="432" height="84" rx="10" fill="#d9eee8"/>
+    <text x="42" y="205" font-size="18" font-weight="700">2 · Authenticator</text>
+    <text x="42" y="234" font-size="16">Verify the token and return its payload.</text>
+    <path d="M240 266v20m-6-6 6 6 6-6" fill="none" stroke="#526780" stroke-width="2"/>
+    <rect x="24" y="294" width="432" height="84" rx="10" fill="#eee6fb"/>
+    <text x="42" y="323" font-size="18" font-weight="700">3 · Validator (optional)</text>
+    <text x="42" y="352" font-size="16">Check policy; return the value to inject.</text>
+    <text x="24" y="416" font-size="16" font-weight="700">Success → inject the resulting value.</text>
+    <text x="24" y="447" font-size="16" fill="#913a31">Throw → stop. Returning false does not deny.</text>
+  </g>
+</svg>
