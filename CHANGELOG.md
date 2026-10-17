@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.0.7
+
+[compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.0.6...v0.0.7)
+
+### 📖 Documentation
+
+- **readme:** Remove social card image ([#10](https://github.com/AntelopeJS/interface-auth/pull/10))
+- Rewrite the README ([#17](https://github.com/AntelopeJS/interface-auth/pull/17))
+- **agents:** Simplify repository guidance ([#18](https://github.com/AntelopeJS/interface-auth/pull/18))
+- Correct authentication sources and cookie contracts ([#19](https://github.com/AntelopeJS/interface-auth/pull/19))
+
+### 🏡 Chore
+
+- Replace Biome with oxlint, oxfmt and Knip ([#7](https://github.com/AntelopeJS/interface-auth/pull/7))
+- Align community files with the organization defaults ([#9](https://github.com/AntelopeJS/interface-auth/pull/9))
+- Remove .git-blame-ignore-revs ([#11](https://github.com/AntelopeJS/interface-auth/pull/11))
+
+### 🤖 CI
+
+- Standardize npm releases ([#6](https://github.com/AntelopeJS/interface-auth/pull/6))
+- Use shared npm release workflow ([#8](https://github.com/AntelopeJS/interface-auth/pull/8))
+- **release:** Release next from a dedicated branch and restore requireCommits ([#12](https://github.com/AntelopeJS/interface-auth/pull/12))
+- **release:** Reference the shared release workflows through v1 ([#13](https://github.com/AntelopeJS/interface-auth/pull/13))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli <rizzitelli.antony@pm.me>
+- Thomas ([@Thomasims](http://github.com/Thomasims))
+
 ## v0.0.6
 
 [compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.0.5...v0.0.6)
