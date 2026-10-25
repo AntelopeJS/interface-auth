@@ -10,12 +10,12 @@ The AntelopeJS interface for token authentication, published as `@antelopejs/int
 
 - `pnpm test` builds `dist`, then runs `ajs module test .`. `src/antelope.test.ts` (`antelopeJs.test` in `package.json`) describes the test project: it installs `@antelopejs/auth-jwt`, `@antelopejs/mongodb` and `@antelopejs/api` from npm at pinned versions, starts an in-memory MongoDB, and runs the compiled suites in `dist/tests`. The suites are written in `src/tests`.
 - The test project serves the API on `127.0.0.1:5010`, so that port must be free.
-- `ajs module test` installs modules through corepack, which Node 25 and later no longer bundle. Run the tests on the Node major in `.nvmrc`.
-- `pnpm run checks` does not run the documentation check. CI runs it through the `docs-files` inputs in `.github/workflows/ci.yml`. To run it locally, clone `AntelopeJS/tooling-configs` at the ref ci-node pins, run `npm ci --prefix actions/docs --omit=dev`, then run `node <clone>/actions/docs/check.mjs --files "$(printf 'README.md\ndocs')" --typescript-project docs/tsconfig.json` from this repository.
+- `ajs module test` installs the modules with `corepack pnpm@<packageManager>` when corepack is on `PATH`, and with the `pnpm` on `PATH` otherwise. Node 25 and later do not bundle corepack, so there install pnpm 10.6.5 another way.
+- `pnpm run checks` does not run the documentation check. CI runs it through the `docs-files` inputs in `.github/workflows/ci.yml`. To run it locally, clone `AntelopeJS/tooling-configs` at `v0.0.9` (the ref ci-node pins), run `npm ci --prefix actions/docs --omit=dev`, then run `node <clone>/actions/docs/check.mjs --files "$(printf 'README.md\ndocs')" --typescript-project docs/tsconfig.json` from this repository.
 
 ## Shipped files
 
-- `docs/` and `skills/` ship in the npm package. `docs/` is the source of interfaces.antelopejs.com/docs/auth. `skills/` reaches users through `antelopeJs.skills`; when the contract changes, update `skills/auth-interface/SKILL.md`.
+- `docs/` and `skills/` ship in the npm package. `docs/` holds the guides the package `homepage` (interfaces.antelopejs.com/docs/auth) points to. `skills/` reaches users through `antelopeJs.skills`; when the contract changes, update `skills/auth-interface/SKILL.md`.
 
 <!-- antelopejs-guardrails:start -->
 <!-- Managed by @antelopejs/tooling-configs. `antelopejs-sync` rewrites everything between these markers; write repository-specific guidance outside them. -->
