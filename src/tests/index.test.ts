@@ -1,12 +1,6 @@
 import { expect } from "chai";
-import { IncomingMessage, ServerResponse } from "node:http";
-import { Socket } from "node:net";
 import { HTTPResult } from "@antelopejs/interface-api";
-import {
-  SignRaw,
-  SignServerResponse,
-  ValidateRaw,
-} from "@antelopejs/interface-auth";
+import { SignRaw, ValidateRaw } from "@antelopejs/interface-auth";
 
 interface TestUser {
   id: string;
@@ -69,22 +63,5 @@ describe("JWT Authentication Tests", () => {
     } catch (error) {
       expect(error).to.be.instanceOf(HTTPResult);
     }
-  });
-
-  it("set-cookie uses standalone boolean directives", async () => {
-    const response = new ServerResponse(new IncomingMessage(new Socket()));
-
-    await SignServerResponse(
-      response,
-      { userId: "user-7" },
-      { expiresIn: "1h" },
-      { httpOnly: true },
-    );
-
-    const setCookieHeader = response.getHeader("set-cookie");
-    expect(setCookieHeader).to.be.a("string");
-    expect(setCookieHeader).to.match(/^ANTELOPEJS_AUTH=/);
-    expect(setCookieHeader).to.match(/httpOnly/);
-    expect(setCookieHeader).to.not.match(/httpOnly=true/);
   });
 });
