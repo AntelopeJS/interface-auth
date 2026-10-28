@@ -189,21 +189,9 @@ interface ClassDecoratorTarget {
   prototype: object;
 }
 
-type DecoratorTarget = object;
-type DecoratorKey = string | number | symbol | undefined;
-type DecoratorIndex = number | undefined;
-
 function readAuthHeader(req: IncomingMessage): string | undefined {
   const header = req.headers[AuthHeaderName];
-  if (typeof header === "string") {
-    return header;
-  }
-
-  if (!header || header.length === 0) {
-    return undefined;
-  }
-
-  return header[0];
+  return Array.isArray(header) ? header[0] : header;
 }
 
 function readCookieToken(req: IncomingMessage): string | undefined {
@@ -229,9 +217,7 @@ function serializeCookieOptions(cookieOptions?: CookieOptions): string {
   }
 
   return entries
-    .map(([key, value]) =>
-      typeof value === "boolean" ? key : `${key}=${String(value)}`,
-    )
+    .map(([key, value]) => (value === true ? key : `${key}=${String(value)}`))
     .join(CookieOptionSeparator);
 }
 
@@ -457,12 +443,7 @@ export function CreateAuthDecorator<R = unknown, T = unknown>(
   const resolvedCallbacks = resolveAuthDecoratorCallbacks(callbacks);
 
   return MakeParameterAndPropertyAndClassDecorator(
-    (
-      target: DecoratorTarget,
-      key: DecoratorKey,
-      index: DecoratorIndex,
-      validator?: AuthValidator<T, R>,
-    ) => {
+    (target, key, index, validator?: AuthValidator<T, R>) => {
       const authValidator = validator ?? resolvedCallbacks.validator;
       const provider = createAuthParameterProvider(
         resolvedCallbacks,
@@ -470,10 +451,7 @@ export function CreateAuthDecorator<R = unknown, T = unknown>(
       );
 
       if (key === undefined) {
-        registerClassParameterProvider(
-          target as ClassDecoratorTarget,
-          provider,
-        );
+        registerClassParameterProvider(target, provider);
         return;
       }
 
