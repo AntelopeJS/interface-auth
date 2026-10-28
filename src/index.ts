@@ -157,7 +157,7 @@ type AuthPayload = string | Buffer | object;
 type VerifyInterfaceHandler = (
   data?: string,
   options?: VerifyOptions,
-) => Promise<unknown>;
+) => Promise<Awaited<ReturnType<AuthVerifier>>>;
 type SignInterfaceHandler = (
   data: AuthPayload,
   options?: SignOptions,
@@ -191,7 +191,15 @@ interface ClassDecoratorTarget {
 
 function readAuthHeader(req: IncomingMessage): string | undefined {
   const header = req.headers[AuthHeaderName];
-  return Array.isArray(header) ? header[0] : header;
+  if (typeof header === "string") {
+    return header;
+  }
+
+  if (!header || header.length === 0) {
+    return undefined;
+  }
+
+  return header[0];
 }
 
 function readCookieToken(req: IncomingMessage): string | undefined {
@@ -238,9 +246,7 @@ function resolveAuthDecoratorCallbacks<T, R>(
 ): ResolvedAuthDecoratorCallbacks<T, R> {
   return {
     source: callbacks.source ?? internal.defaultSource,
-    authenticator:
-      callbacks.authenticator ??
-      (internal.defaultAuthenticator as AuthVerifier<T>),
+    authenticator: callbacks.authenticator ?? ValidateRaw,
     authenticatorOptions: callbacks.authenticatorOptions ?? {},
     validator: callbacks.validator,
   };
@@ -306,7 +312,7 @@ export namespace internal {
     req: IncomingMessage,
     res: ServerResponse,
     source: AuthSource = defaultSource,
-    authenticator: AuthVerifier<T> = defaultAuthenticator as AuthVerifier<T>,
+    authenticator: AuthVerifier<T> = ValidateRaw,
     authenticatorOptions: VerifyOptions = {},
     validator?: AuthValidator<T, R>,
   ): Promise<T | R> {
