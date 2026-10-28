@@ -157,7 +157,7 @@ type AuthPayload = string | Buffer | object;
 type VerifyInterfaceHandler = (
   data?: string,
   options?: VerifyOptions,
-) => Promise<unknown>;
+) => Promise<Awaited<ReturnType<AuthVerifier>>>;
 type SignInterfaceHandler = (
   data: AuthPayload,
   options?: SignOptions,
@@ -188,10 +188,6 @@ interface ResolvedAuthDecoratorCallbacks<T, R> {
 interface ClassDecoratorTarget {
   prototype: object;
 }
-
-type DecoratorTarget = object;
-type DecoratorKey = string | number | symbol | undefined;
-type DecoratorIndex = number | undefined;
 
 function readAuthHeader(req: IncomingMessage): string | undefined {
   const header = req.headers[AuthHeaderName];
@@ -229,9 +225,7 @@ function serializeCookieOptions(cookieOptions?: CookieOptions): string {
   }
 
   return entries
-    .map(([key, value]) =>
-      typeof value === "boolean" ? key : `${key}=${String(value)}`,
-    )
+    .map(([key, value]) => (value === true ? key : `${key}=${String(value)}`))
     .join(CookieOptionSeparator);
 }
 
@@ -252,9 +246,7 @@ function resolveAuthDecoratorCallbacks<T, R>(
 ): ResolvedAuthDecoratorCallbacks<T, R> {
   return {
     source: callbacks.source ?? internal.defaultSource,
-    authenticator:
-      callbacks.authenticator ??
-      (internal.defaultAuthenticator as AuthVerifier<T>),
+    authenticator: callbacks.authenticator ?? ValidateRaw,
     authenticatorOptions: callbacks.authenticatorOptions ?? {},
     validator: callbacks.validator,
   };
@@ -320,7 +312,7 @@ export namespace internal {
     req: IncomingMessage,
     res: ServerResponse,
     source: AuthSource = defaultSource,
-    authenticator: AuthVerifier<T> = defaultAuthenticator as AuthVerifier<T>,
+    authenticator: AuthVerifier<T> = ValidateRaw,
     authenticatorOptions: VerifyOptions = {},
     validator?: AuthValidator<T, R>,
   ): Promise<T | R> {
@@ -457,12 +449,7 @@ export function CreateAuthDecorator<R = unknown, T = unknown>(
   const resolvedCallbacks = resolveAuthDecoratorCallbacks(callbacks);
 
   return MakeParameterAndPropertyAndClassDecorator(
-    (
-      target: DecoratorTarget,
-      key: DecoratorKey,
-      index: DecoratorIndex,
-      validator?: AuthValidator<T, R>,
-    ) => {
+    (target, key, index, validator?: AuthValidator<T, R>) => {
       const authValidator = validator ?? resolvedCallbacks.validator;
       const provider = createAuthParameterProvider(
         resolvedCallbacks,
@@ -470,10 +457,7 @@ export function CreateAuthDecorator<R = unknown, T = unknown>(
       );
 
       if (key === undefined) {
-        registerClassParameterProvider(
-          target as ClassDecoratorTarget,
-          provider,
-        );
+        registerClassParameterProvider(target, provider);
         return;
       }
 
