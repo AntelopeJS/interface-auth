@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "protect-route",
+      "area": "framework",
+      "style": "clean",
+      "prompt": "How do I protect a route with authentication?",
+      "origin": "docs-assistant",
+      "expect": {
+        "skills": ["auth-interface"],
+        "acceptable": ["api-interface", "ajs-consume-interface", "antelopejs"],
+        "mustMention": ["Authentication"]
+      }
+    },
+    {
+      "id": "protect-route-casual",
+      "area": "framework",
+      "style": "casual",
+      "prompt": "what do i need to do so my route is protected?",
+      "origin": "docs-assistant",
+      "expect": {
+        "skills": ["auth-interface"],
+        "acceptable": ["api-interface", "ajs-consume-interface", "antelopejs"],
+        "mustMention": ["Authentication"]
+      }
+    },
+    {
+      "id": "auth-interface-dms-neighbour",
+      "area": "dms",
+      "style": "clean",
+      "prompt": "In the DMS, only administrators should open the billing page. Register a permission for it and gate the page.",
+      "expect": {
+        "skills": ["dms-auth"],
+        "acceptable": ["dms", "dms-pages"],
+        "avoid": ["auth-interface"]
+      }
+    },
+    {
+      "id": "auth-interface-cookie-response",
+      "area": "framework",
+      "style": "clean",
+      "prompt": "After login I want the signed token set as a cookie on the response instead of returned in the body. What do I call?",
+      "expect": {
+        "skills": ["auth-interface"],
+        "acceptable": ["api-interface", "ajs-consume-interface", "antelopejs"],
+        "mustMention": ["SignServerResponse"]
+      }
+    },
+    {
+      "id": "auth-interface-token-expiry-casual",
+      "area": "framework",
+      "style": "casual",
+      "prompt": "token dies too quick, how do i make it last a day",
+      "expect": {
+        "skills": ["auth-interface"],
+        "acceptable": ["antelopejs", "ajs-consume-interface"],
+        "mustMention": ["SignRaw", "expiresIn"]
+      }
+    }
+  ]
+}
