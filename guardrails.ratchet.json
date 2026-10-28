@@ -1,6 +1,5 @@
 {
   "rules": {
-    "antelopejs/no-comments": 5,
     "anti-slop/no-object-parameters": 4,
     "anti-slop/no-runtime-typeof": 2,
     "anti-slop/no-unknown-returns": 1,
