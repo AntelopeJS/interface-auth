@@ -1,6 +1,6 @@
-import { equal, interrupted } from "@antelopejs/tooling-configs/verify";
+import { equal } from "@antelopejs/tooling-configs/verify";
 import { ImplementInterface } from "@antelopejs/interface-core";
-import type { HttpResult, InterfaceHooks, Journey, VerifyConfig } from "@antelopejs/tooling-configs/verify";
+import type { InterfaceHooks, Journey, VerifyConfig } from "@antelopejs/tooling-configs/verify";
 
 import type * as AuthInterface from "../../../src/index.ts";
 
@@ -12,12 +12,6 @@ const signed = (data: SignData): string => `tok:${JSON.stringify(data)}`;
 
 /** What the stand-in provider answers to `internal.Verify`: the claims it was asked to verify. */
 const verified = (token: string | undefined, options: AuthInterface.VerifyOptions | undefined) => ({ verified: token ?? null, options: options ?? null });
-
-/** What the driver module answers to a route, parsed. */
-interface Reply {
-  ok: boolean;
-  value: HttpResult["json"];
-}
 
 /** The setup every scenario shares: the packed interface, a recording stand-in provider behind `internal.Sign` and `internal.Verify`, and small helpers. */
 const SCENARIO_PRELUDE = `
@@ -102,74 +96,6 @@ function declared(title: string, probe: string): Journey {
     },
   };
 }
-
-/** Parses the body of a driver answer: the value on success, the error otherwise. */
-function reply(body: string): Reply {
-  const parsed: { ok: boolean; value?: HttpResult["json"]; error?: HttpResult["json"] } = JSON.parse(body);
-  return { ok: parsed.ok, value: parsed.ok ? parsed.value : parsed.error };
-}
-
-/** Every runtime function of the packed interface, the `internal` namespace included, by path. */
-const RUNTIME_FUNCTIONS = [
-  "Authentication",
-  "CreateAuthDecorator",
-  "SignRaw",
-  "SignServerResponse",
-  "ValidateRaw",
-  "internal.CheckAuthentication",
-  "internal.Sign",
-  "internal.Verify",
-  "internal.defaultAuthenticator",
-  "internal.defaultSource",
-];
-
-/** The proxies a consumer reaches through core, with the arguments sent and what the stub provider answers. */
-const PROXY_CALLS = [
-  { path: ["internal", "Sign"], args: ["payload"], expect: 'tok:"payload"' },
-  { path: ["internal", "Verify"], args: ["tok", { maxAge: 1 }], expect: { verified: "tok", options: { maxAge: 1 } } },
-];
-
-/**
- * The shared `every-function` and `minor-bump` journeys read the declarations with `types: []`, which fails on the Node built-ins `node:http` that
- * these declarations import until tooling-configs resolves them. This journey lists the runtime functions of the packed interface and calls
- * each one through core in `ajs project dev` next to the stub provider.
- */
-const coreFunctions: Journey = {
-  title: "every runtime function of the packed interface answers through core from a stub provider",
-  entryPoint: "a consumer module calling the packed interface in `ajs project dev`",
-  async run(context) {
-    const file = `${context.work}/exports.js`;
-    context.edit(
-      "write the export listing",
-      file,
-      `const auth = require(process.argv[2]);
-const names = (object, prefix) => Object.keys(object).filter((key) => typeof object[key] === "function").map((key) => prefix + key);
-console.log(JSON.stringify([...names(auth, ""), ...names(auth.internal, "internal.")].sort()));
-`,
-    );
-    const listed = await context.command("list the runtime functions", "node", [file, `${context.repo}/dist/index.js`]);
-    context.expect(listed.folder, [equal("the packed interface exports exactly the documented functions", listed.stdout.trim(), JSON.stringify(RUNTIME_FUNCTIONS))], { critical: true });
-    const app = await context.dev("ajs project dev", context.fixture());
-    for (const [path, call] of Object.entries(CALLS)) {
-      const answer = await context.http(`call ${path}`, `http://127.0.0.1:${app.port}/hook`, { method: "POST", body: JSON.stringify({ path }) });
-      const got = reply(answer.body);
-      context.expect(answer.folder, [
-        { name: `${path} resolved through core`, pass: got.ok, detail: JSON.stringify(got.value) },
-        equal(`${path} returned the value verify.config.ts expects`, got.value, call.expect),
-      ]);
-    }
-    for (const proxy of PROXY_CALLS) {
-      const name = `internal.${proxy.path[1]}`;
-      const answer = await context.call(`call ${name}`, app, { path: proxy.path, args: proxy.args });
-      context.expect(answer.folder, [
-        { name: `${name} resolved through core`, pass: answer.ok, detail: JSON.stringify(answer.value) },
-        equal(`${name} returned what the stub provider answers`, answer.value, proxy.expect),
-      ]);
-    }
-    const stopped = await context.stop("SIGINT", app);
-    context.expect(stopped.folder, [interrupted(stopped)]);
-  },
-};
 
 const SIGN_VERIFY_BODY = `
   const token = await auth.SignRaw({ userId: 123, role: "admin" }, { expiresIn: "1h", notBefore: 5 });
@@ -367,7 +293,7 @@ const config: VerifyConfig<typeof AuthInterface> = {
     format: {
       globs: ["src/index.ts"],
       funnels: [],
-      containments: ["cookies/sign-server-response", "request-auth/default-source"],
+      containments: ["cookies/sign-server-response"],
       why: "the x-antelopejs-auth header name, the ANTELOPEJS_AUTH cookie name and the cookie attribute syntax are what browsers and clients already hold",
     },
     contract: {
@@ -392,7 +318,6 @@ const config: VerifyConfig<typeof AuthInterface> = {
     calls: CALLS,
   },
   journeys: {
-    "core-functions": coreFunctions,
     "sign-and-verify": scenario("SignRaw and ValidateRaw hand data, tokens and options to the provider and return what it answers, including a rejection", SIGN_VERIFY_BODY, '{"token":"tok:{\\"userId\\":123,\\"role\\":\\"admin\\"}","text":"tok:plain-data","claims":{"sub":"tok:{\\"userId\\":123,\\"role\\":\\"admin\\"}","options":{"maxAge":"30m","ignoreExpiration":false}},"string":"plain","missing":"invalid token","rejected":"invalid token","log":[["sign",{"userId":123,"role":"admin"},{"expiresIn":"1h","notBefore":5}],["sign","plain-data",null],["verify","tok:{\\"userId\\":123,\\"role\\":\\"admin\\"}",{"maxAge":"30m","ignoreExpiration":false}],["verify","str",null],["verify",null,null],["verify","bad",{"ignoreNotBefore":true}]]}'),
     "token-types": declared("SignRaw, ValidateRaw and the claim and option types have the documented shapes", TOKEN_TYPES),
     "sign-server-response": scenario("SignServerResponse sets the ANTELOPEJS_AUTH cookie, replaces Set-Cookie, writes cookie options literally and returns the unsent response", COOKIE_BODY, '{"bare":"ANTELOPEJS_AUTH=tok:{\\"userId\\":1}","same":true,"sent":false,"full":true,"dropped":"ANTELOPEJS_AUTH=tok:s","mixed":"ANTELOPEJS_AUTH=tok:s; httpOnly; path=/a","log":[["sign",{"userId":1},null],["sign","s",{"expiresIn":"8h"}],["sign","s",null],["sign","s",null]]}'),
