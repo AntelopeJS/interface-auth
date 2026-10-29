@@ -13,7 +13,7 @@ The fixed journeys every verdict runs, whatever the diff touches: pack the inter
 
 ## Sub-features
 
-- `every-function`: `ValidateRaw`, `SignRaw`, `SignServerResponse`, `CreateAuthDecorator`, `Authentication` and the `internal` helpers answer through core with the value `verify.config.ts` expects; `internal.Sign` and `internal.Verify` answer the stub provider (`Sign` returns `tok:<JSON of the data>`, `Verify` returns the token and options it received).
+- `every-function`: `ValidateRaw`, `SignRaw`, `SignServerResponse`, `CreateAuthDecorator`, `Authentication` and the `internal` helpers answer through core with the value `verify.config.ts` expects; `internal.Sign` and `internal.Verify` answer the stub provider with the stub's echo (`SignServerResponse` therefore writes the echo object's string as the token).
 - `minor-bump`: an added, changed or removed function releases as at least a new minor.
 
 ## How to get to it (user POV)

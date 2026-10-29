@@ -1,17 +1,7 @@
 import { equal } from "@antelopejs/tooling-configs/verify";
-import { ImplementInterface } from "@antelopejs/interface-core";
 import type { InterfaceHooks, Journey, VerifyConfig } from "@antelopejs/tooling-configs/verify";
 
 import type * as AuthInterface from "../../../src/index.ts";
-
-/** What `internal.Sign` receives. */
-type SignData = Parameters<typeof AuthInterface.SignRaw>[0];
-
-/** What the stand-in provider answers to `internal.Sign`: a token naming its data. */
-const signed = (data: SignData): string => `tok:${JSON.stringify(data)}`;
-
-/** What the stand-in provider answers to `internal.Verify`: the claims it was asked to verify. */
-const verified = (token: string | undefined, options: AuthInterface.VerifyOptions | undefined) => ({ verified: token ?? null, options: options ?? null });
 
 /** The setup every scenario shares: the packed interface, a recording stand-in provider behind `internal.Sign` and `internal.Verify`, and small helpers. */
 const SCENARIO_PRELUDE = `
@@ -250,9 +240,9 @@ type _Decorators = Assert<Identical<ReturnType<typeof Typed>, ReturnType<typeof 
 const CALLS: NonNullable<InterfaceHooks<typeof AuthInterface>["calls"]> = {
   ".:ValidateRaw": {
     call: (api) => api.ValidateRaw("tok", { maxAge: "1h" }),
-    expect: { verified: "tok", options: { maxAge: "1h" } },
+    expect: { stub: ".:internal.Verify", args: ["tok", { maxAge: "1h" }] },
   },
-  ".:SignRaw": { call: (api) => api.SignRaw({ userId: 1 }, { expiresIn: "1h" }), expect: 'tok:{"userId":1}' },
+  ".:SignRaw": { call: (api) => api.SignRaw({ userId: 1 }, { expiresIn: "1h" }), expect: { stub: ".:internal.Sign", args: [{ userId: 1 }, { expiresIn: "1h" }] } },
   ".:SignServerResponse": {
     call: async (api) => {
       const headers: Record<string, string> = {};
@@ -261,7 +251,7 @@ const CALLS: NonNullable<InterfaceHooks<typeof AuthInterface>["calls"]> = {
       const returned = await api.SignServerResponse(res, "payload", undefined, { httpOnly: true });
       return { headers, same: returned === res };
     },
-    expect: { headers: { "Set-Cookie": 'ANTELOPEJS_AUTH=tok:"payload"; httpOnly' }, same: true },
+    expect: { headers: { "Set-Cookie": "ANTELOPEJS_AUTH=[object Object]; httpOnly" }, same: true },
   },
   ".:CreateAuthDecorator": { call: (api) => api.CreateAuthDecorator({})().length, expect: 3 },
   ".:Authentication": { call: (api) => api.Authentication().length, expect: 3 },
@@ -272,7 +262,7 @@ const CALLS: NonNullable<InterfaceHooks<typeof AuthInterface>["calls"]> = {
   },
   ".:internal.defaultAuthenticator": {
     call: async (api) => api.internal.defaultAuthenticator("tok", {}),
-    expect: { verified: "tok", options: {} },
+    expect: { stub: ".:internal.Verify", args: ["tok", {}] },
   },
   ".:internal.CheckAuthentication": {
     call: (api) =>
@@ -312,9 +302,6 @@ const config: VerifyConfig<typeof AuthInterface> = {
     },
   },
   interface: {
-    provide(api) {
-      ImplementInterface(api, { internal: { Sign: signed, Verify: verified } });
-    },
     calls: CALLS,
   },
   journeys: {
