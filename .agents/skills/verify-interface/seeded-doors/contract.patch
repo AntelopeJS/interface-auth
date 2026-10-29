@@ -1,0 +1,13 @@
+diff --git a/src/index.ts b/src/index.ts
+index 5cc53df..dbe29e8 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -142,7 +142,7 @@ export interface SignOptions {
+   /**
+    * Expiration as a number of seconds or a timespan string.
+    */
+-  expiresIn?: string | number;
++  expiresIn?: string;
+ 
+   /**
+    * Not-before field as a number of seconds or a timespan string.

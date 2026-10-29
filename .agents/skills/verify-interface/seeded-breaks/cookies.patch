@@ -1,0 +1,13 @@
+diff --git a/src/index.ts b/src/index.ts
+index 5cc53df..a88241c 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -256,7 +256,7 @@ function serializeCookieOptions(cookieOptions?: CookieOptions): string {
+   }
+ 
+   const entries = Object.entries(cookieOptions).filter(
+-    ([, value]) => value !== undefined && value !== false,
++    ([, value]) => value !== undefined,
+   );
+   if (entries.length === 0) {
+     return EmptyString;
