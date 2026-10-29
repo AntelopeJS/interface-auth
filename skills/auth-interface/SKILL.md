@@ -24,9 +24,12 @@ import {
   ValidateRaw,
   SignServerResponse,
   internal, // provider side only
+  type AuthClaims,
   type AuthSource,
   type AuthVerifier,
   type AuthValidator,
+  type JsonObject,
+  type JsonValue,
   type SignOptions,
   type VerifyOptions,
   type CookieOptions,
@@ -61,7 +64,9 @@ class LibrarianController extends Controller("/librarians") {
 }
 ```
 
-Custom pipelines use `CreateAuthDecorator({ source?, authenticator?, authenticatorOptions?, validator? })`; the callbacks run as `source(req, res)` → `authenticator(data, authenticatorOptions)` → `validator(data)` → injected parameter.
+Custom pipelines use `CreateAuthDecorator({ source?, authenticator?, authenticatorOptions?, validator? })`; the callbacks run as `source(req, res)` → `authenticator(data, authenticatorOptions)` → `validator(data)` → injected parameter. Without an `authenticator` the validator receives an `AuthClaims`; with one it receives what the authenticator returns.
+
+`ValidateRaw` has no type parameter: it returns `AuthClaims` (`string | JsonObject`). To read fields, parse the claims once, in a custom `authenticator` (`async (token, options) => parseSession(await ValidateRaw(token, options))`) or at the call site.
 
 ## Providing
 
@@ -72,7 +77,7 @@ import { ImplementInterface } from "@antelopejs/interface-core";
 import { internal } from "@antelopejs/interface-auth";
 
 ImplementInterface(internal, {
-  Verify: (token, options) => decodeAndVerify(token, options), // return payload, throw on invalid
+  Verify: (token, options) => decodeAndVerify(token, options), // return the AuthClaims (string or JSON object), throw on invalid
   Sign: (data, options) => signToken(data, options), // return token string
 });
 ```
@@ -81,6 +86,7 @@ Declare `"antelopeJs": { "implements": ["@antelopejs/interface-auth"] }` in the 
 
 ## Gotchas
 
+- The data passed to `SignRaw` / `SignServerResponse` is a `string`, a `Buffer` or a `JsonObject`. A `Date`, a class instance or an `interface`-typed object (no index signature) is a compile error; convert it or use a `type` alias. `undefined`-valued keys are accepted.
 - `SignRaw` / `ValidateRaw` / `SignServerResponse` are interface proxy calls: they return Promises and only resolve once a provider module is attached. While a provider module is loaded but not yet attached, earlier calls are queued, not failed — always `await`. But when no loaded module provides the interface (e.g. a stubbed `optionalDependencies` entry), the core neutralizes the proxies and those calls reject instead of queuing.
 - Default token source (`internal.defaultSource`): the `x-antelopejs-auth` request header, falling back to the `ANTELOPEJS_AUTH` cookie. `SignServerResponse` sets that same cookie via `Set-Cookie`.
 - `@Authentication(validator?)` accepts an optional validator at the use site; it overrides any validator configured in `CreateAuthDecorator`.

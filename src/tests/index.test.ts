@@ -32,7 +32,7 @@ describe("JWT Authentication Tests", () => {
     const userData = testUsers.default;
     const token = await SignRaw(userData, { expiresIn: "1h" });
 
-    const verifiedData = await ValidateRaw<TestUser>(token);
+    const verifiedData = await ValidateRaw(token);
 
     expect(verifiedData).to.be.an("object");
     expect(verifiedData).to.have.property("name", userData.name);
@@ -44,7 +44,7 @@ describe("JWT Authentication Tests", () => {
     const invalidToken = "invalid.jwt.token";
 
     try {
-      await ValidateRaw<TestUser>(invalidToken);
+      await ValidateRaw(invalidToken);
       expect.fail("Should have thrown an error for invalid token");
     } catch (error) {
       expect(error).to.be.instanceOf(HTTPResult);
@@ -58,7 +58,7 @@ describe("JWT Authentication Tests", () => {
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     try {
-      await ValidateRaw<TestUser>(token);
+      await ValidateRaw(token);
       expect.fail("Should have thrown an error for expired token");
     } catch (error) {
       expect(error).to.be.instanceOf(HTTPResult);
