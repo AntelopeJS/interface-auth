@@ -174,4 +174,32 @@ describe("Auth helpers built from this repository", () => {
       ["the-token", {}],
     ]);
   });
+
+  it("CheckAuthentication calls the callbacks without the callbacks object as receiver", async () => {
+    const receivers: unknown[] = [];
+    const callbacks = {
+      source() {
+        receivers.push(this);
+        return "the-token";
+      },
+      authenticator() {
+        receivers.push(this);
+        return { id: 1 };
+      },
+      authenticatorOptions: {},
+      validator() {
+        receivers.push(this);
+        return "validated";
+      },
+    };
+
+    const result = await internal.CheckAuthentication(
+      requestWith({}),
+      newResponse(),
+      callbacks,
+    );
+
+    expect(result).to.equal("validated");
+    expect(receivers).to.deep.equal([undefined, undefined, undefined]);
+  });
 });
