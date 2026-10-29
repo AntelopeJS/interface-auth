@@ -1,8 +1,0 @@
-{
-  "rules": {
-    "anti-slop/no-object-parameters": 3,
-    "anti-slop/require-safety-comment-for-type-assertion": 1,
-    "eslint/max-params": 1
-  },
-  "oversizeFiles": {}
-}

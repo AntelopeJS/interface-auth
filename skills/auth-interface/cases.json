@@ -57,6 +57,17 @@
         "acceptable": ["antelopejs", "ajs-consume-interface"],
         "mustMention": ["SignRaw", "expiresIn"]
       }
+    },
+    {
+      "id": "auth-interface-typed-claims",
+      "area": "framework",
+      "style": "clean",
+      "prompt": "ValidateRaw<Profile>(token) no longer compiles. How do I get a typed profile out of a verified token?",
+      "expect": {
+        "skills": ["auth-interface"],
+        "acceptable": ["antelopejs", "ajs-consume-interface"],
+        "mustMention": ["AuthClaims"]
+      }
     }
   ]
 }

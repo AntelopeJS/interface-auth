@@ -19,28 +19,32 @@ function newResponse(): ServerResponse {
   return new ServerResponse(new IncomingMessage(new Socket()));
 }
 
-describe("Auth interface built from this repository", () => {
-  before(() => {
-    ImplementInterface(
-      { Sign: internal.Sign, Verify: internal.Verify },
-      {
-        Sign: async (...args) => {
-          signCalls.push(args);
-          return signedToken;
-        },
-        Verify: async (...args) => {
-          verifyCalls.push(args);
-          return verifyOutcome();
-        },
-      },
-    );
-  });
+function resetProviderState(): void {
+  signCalls.length = 0;
+  verifyCalls.length = 0;
+  verifyOutcome = () => ({});
+}
 
-  beforeEach(() => {
-    signCalls.length = 0;
-    verifyCalls.length = 0;
-    verifyOutcome = () => ({});
-  });
+function implementProviders(): void {
+  ImplementInterface(
+    { Sign: internal.Sign, Verify: internal.Verify },
+    {
+      Sign: async (...args) => {
+        signCalls.push(args);
+        return signedToken;
+      },
+      Verify: async (...args) => {
+        verifyCalls.push(args);
+        return verifyOutcome();
+      },
+    },
+  );
+}
+
+describe("Auth interface built from this repository", () => {
+  before(implementProviders);
+
+  beforeEach(resetProviderState);
 
   it("SignRaw hands the payload and options to the Sign provider", async () => {
     const token = await SignRaw({ userId: "u1" }, { expiresIn: "1h" });
@@ -73,6 +77,12 @@ describe("Auth interface built from this repository", () => {
 
     expect(caught).to.equal(failure);
   });
+});
+
+describe("Auth helpers built from this repository", () => {
+  before(implementProviders);
+
+  beforeEach(resetProviderState);
 
   it("set-cookie uses standalone boolean directives", async () => {
     const response = newResponse();
@@ -136,21 +146,60 @@ describe("Auth interface built from this repository", () => {
     verifyOutcome = () => ({ id: 1 });
     const request = requestWith({ "x-antelopejs-auth": "the-token" });
 
-    const plain = await internal.CheckAuthentication(request, newResponse());
+    const callbacks = {
+      source: internal.defaultSource,
+      authenticator: ValidateRaw,
+      authenticatorOptions: {},
+      validator: undefined,
+    };
+
+    const plain = await internal.CheckAuthentication(
+      request,
+      newResponse(),
+      callbacks,
+    );
     const validated = await internal.CheckAuthentication(
       request,
       newResponse(),
-      undefined,
-      undefined,
-      undefined,
-      (payload: { id: number }) => ({ ...payload, validated: true }),
+      {
+        ...callbacks,
+        validator: (claims) => ({ claims, validated: true }),
+      },
     );
 
     expect(plain).to.deep.equal({ id: 1 });
-    expect(validated).to.deep.equal({ id: 1, validated: true });
+    expect(validated).to.deep.equal({ claims: { id: 1 }, validated: true });
     expect(verifyCalls).to.deep.equal([
       ["the-token", {}],
       ["the-token", {}],
     ]);
+  });
+
+  it("CheckAuthentication calls the callbacks without the callbacks object as receiver", async () => {
+    const receivers: unknown[] = [];
+    const callbacks = {
+      source() {
+        receivers.push(this);
+        return "the-token";
+      },
+      authenticator() {
+        receivers.push(this);
+        return { id: 1 };
+      },
+      authenticatorOptions: {},
+      validator() {
+        receivers.push(this);
+        return "validated";
+      },
+    };
+
+    const result = await internal.CheckAuthentication(
+      requestWith({}),
+      newResponse(),
+      callbacks,
+    );
+
+    expect(result).to.equal("validated");
+    expect(receivers).to.deep.equal([undefined, undefined, undefined]);
   });
 });

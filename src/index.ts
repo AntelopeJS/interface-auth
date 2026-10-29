@@ -10,6 +10,35 @@ const CookieOptionSeparator = "; ";
 const ClassParameterProviderSymbolDescription = "authentication-class-provider";
 
 /**
+ * A value JSON can represent: a string, number, boolean, `null`, an array of
+ * JSON values, or a {@link JsonObject}. `Date`, `Buffer`, functions and class
+ * instances are not JSON values; convert them first (for example
+ * `date.toISOString()`).
+ */
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | JsonObject;
+
+/**
+ * String keys mapped to JSON values. A key whose value is `undefined` is
+ * accepted so an optional field can be passed as is; `JSON.stringify` drops
+ * it. An object typed as an `interface` is not assignable (it has no index
+ * signature); declare it with a `type` alias or spread it into a literal.
+ */
+export type JsonObject = { [key: string]: JsonValue | undefined };
+
+/**
+ * What a verified token yields: the signed string, or the JSON object that was
+ * signed. The shape inside the object is not checked by the interface; read it
+ * through a parser of your own (see {@link AuthVerifier}).
+ */
+export type AuthClaims = string | JsonObject;
+
+/**
  * Function type that extracts authentication data from HTTP request.
  *
  * @param req - The incoming HTTP request
@@ -35,11 +64,11 @@ export type AuthSource = (
  *
  * @example
  * ```typescript
- * const jwtVerifier: AuthVerifier<UserProfile> = (token) =>
- *   jwt.verify(token, SECRET_KEY) as UserProfile;
+ * const sessionVerifier: AuthVerifier<UserProfile> = async (token, options) =>
+ *   parseUserProfile(await ValidateRaw(token, options));
  * ```
  */
-export type AuthVerifier<T = unknown> = (
+export type AuthVerifier<T = AuthClaims> = (
   data?: string,
   options?: VerifyOptions,
 ) => Promise<T> | T;
@@ -57,7 +86,7 @@ export type AuthVerifier<T = unknown> = (
  *   profile.roles.includes('admin');
  * ```
  */
-export type AuthValidator<T = unknown, R = unknown> = (
+export type AuthValidator<T = AuthClaims, R = unknown> = (
   data: T,
 ) => Promise<R> | R;
 
@@ -153,11 +182,11 @@ export interface VerifyOptions {
   maxAge?: string | number;
 }
 
-type AuthPayload = string | Buffer | object;
+type AuthPayload = string | Buffer | JsonObject;
 type VerifyInterfaceHandler = (
   data?: string,
   options?: VerifyOptions,
-) => Promise<Awaited<ReturnType<AuthVerifier>>>;
+) => Promise<AuthClaims>;
 type SignInterfaceHandler = (
   data: AuthPayload,
   options?: SignOptions,
@@ -171,11 +200,24 @@ interface AuthenticationContext {
   rawResponse: ServerResponse;
 }
 
-interface AuthDecoratorCallbacks<T, R> {
+interface AuthDecoratorOptions<T, R> {
   source?: AuthSource;
-  authenticator?: AuthVerifier<T>;
   authenticatorOptions?: VerifyOptions;
   validator?: AuthValidator<T, R>;
+}
+
+interface DefaultAuthDecoratorCallbacks<R> extends AuthDecoratorOptions<
+  AuthClaims,
+  R
+> {
+  authenticator?: undefined;
+}
+
+interface CustomAuthDecoratorCallbacks<T, R> extends AuthDecoratorOptions<
+  T,
+  R
+> {
+  authenticator: AuthVerifier<T>;
 }
 
 interface ResolvedAuthDecoratorCallbacks<T, R> {
@@ -238,13 +280,14 @@ function createSetCookieHeader(
 }
 
 function resolveAuthDecoratorCallbacks<T, R>(
-  callbacks: AuthDecoratorCallbacks<T, R>,
+  options: AuthDecoratorOptions<T, R>,
+  authenticator: AuthVerifier<T>,
 ): ResolvedAuthDecoratorCallbacks<T, R> {
   return {
-    source: callbacks.source ?? internal.defaultSource,
-    authenticator: callbacks.authenticator ?? ValidateRaw,
-    authenticatorOptions: callbacks.authenticatorOptions ?? {},
-    validator: callbacks.validator,
+    source: options.source ?? internal.defaultSource,
+    authenticator,
+    authenticatorOptions: options.authenticatorOptions ?? {},
+    validator: options.validator,
   };
 }
 
@@ -253,14 +296,10 @@ function createAuthParameterProvider<T, R>(
   validator?: AuthValidator<T, R>,
 ): AuthParameterProvider<T, R> {
   return (context: AuthenticationContext) =>
-    internal.CheckAuthentication(
-      context.rawRequest,
-      context.rawResponse,
-      callbacks.source,
-      callbacks.authenticator,
-      callbacks.authenticatorOptions,
+    internal.CheckAuthentication(context.rawRequest, context.rawResponse, {
+      ...callbacks,
       validator,
-    );
+    });
 }
 
 function registerClassParameterProvider<T, R>(
@@ -274,6 +313,26 @@ function registerClassParameterProvider<T, R>(
     provider,
   );
 }
+
+function buildAuthDecorator<T, R>(
+  callbacks: ResolvedAuthDecoratorCallbacks<T, R>,
+) {
+  return MakeParameterAndPropertyAndClassDecorator(
+    (target, key, index, validator?: AuthValidator<T, R>) => {
+      const authValidator = validator ?? callbacks.validator;
+      const provider = createAuthParameterProvider(callbacks, authValidator);
+
+      if (key === undefined) {
+        registerClassParameterProvider(target, provider);
+        return;
+      }
+
+      SetParameterProvider(target, key, index, provider);
+    },
+  );
+}
+
+type AuthDecoratorFactory<T, R> = ReturnType<typeof buildAuthDecorator<T, R>>;
 
 /**
  * @internal
@@ -289,7 +348,7 @@ export namespace internal {
     return readAuthHeader(req) ?? readCookieToken(req);
   }
 
-  export const defaultAuthenticator: AuthVerifier<unknown> = ValidateRaw;
+  export const defaultAuthenticator: AuthVerifier = ValidateRaw;
 
   /**
    * Verifies the signature of signed data attached to the HTTP request and returns the data contained therein.
@@ -298,20 +357,16 @@ export namespace internal {
    * @template R - The type of data after validation
    * @param req - HTTP Request
    * @param res - HTTP Response
-   * @param source - Callback to retrieve the signed data from the request
-   * @param authenticator - Callback to verify the signature
-   * @param authenticatorOptions - Verifier options
-   * @param validator - Custom validator callback
+   * @param callbacks - The source, the authenticator with its options, and the optional validator, all already resolved
    * @returns The authenticated and validated data
    */
-  export async function CheckAuthentication<T = unknown, R = unknown>(
+  export async function CheckAuthentication<T = AuthClaims, R = unknown>(
     req: IncomingMessage,
     res: ServerResponse,
-    source: AuthSource = defaultSource,
-    authenticator: AuthVerifier<T> = ValidateRaw,
-    authenticatorOptions: VerifyOptions = {},
-    validator?: AuthValidator<T, R>,
+    callbacks: ResolvedAuthDecoratorCallbacks<T, R>,
   ): Promise<T | R> {
+    const { source, authenticator, authenticatorOptions, validator } =
+      callbacks;
     const verifiedData = await authenticator(
       source(req, res),
       authenticatorOptions,
@@ -327,22 +382,25 @@ export namespace internal {
 /**
  * Verifies the signature of some signed data and returns the data contained therein.
  *
- * @template T - The type of data expected after verification
+ * The result is the signed string or JSON object ({@link AuthClaims}). Its shape is
+ * not checked: parse it into the type you expect before relying on a field.
+ *
  * @param token - The signed data token to verify
  * @param options - Options for verification
  * @returns A promise resolving to the verified data
  *
  * @example
  * ```typescript
- * const userData = await ValidateRaw<UserProfile>(authToken, { maxAge: '1h' });
- * console.log(userData.name);
+ * const claims = await ValidateRaw(authToken, { maxAge: '1h' });
+ * const user = parseUserProfile(claims);
+ * console.log(user.name);
  * ```
  */
-export function ValidateRaw<T = unknown>(
+export function ValidateRaw(
   token?: string,
   options?: VerifyOptions,
-): Promise<T> {
-  return internal.Verify(token, options) as Promise<T>;
+): Promise<AuthClaims> {
+  return internal.Verify(token, options);
 }
 
 /**
@@ -405,8 +463,12 @@ export function SignServerResponse(
  * A validator must throw to deny access; its return value is injected unchanged.
  * A validator passed to the decorator replaces the configured validator.
  *
- * @template R - The type of the final validator result
+ * Without `authenticator`, the default one calls {@link ValidateRaw} and the validator
+ * receives an {@link AuthClaims}. With an `authenticator`, `T` is whatever it returns,
+ * so a parser written there gives the validator a typed value.
+ *
  * @template T - The type of the authenticated data before validation
+ * @template R - The type of the final validator result
  * @param callbacks - Configuration object containing callback functions
  * @param callbacks.source - Extracts the signed data from the request
  * @param callbacks.authenticator - Verifies the signature
@@ -421,11 +483,11 @@ export function SignServerResponse(
  *
  * // Create a custom auth decorator
  * const RequireAdmin = CreateAuthDecorator({
- *   validator: (user: any) => {
- *     if (!user || user.role !== 'admin') {
+ *   validator: (claims) => {
+ *     if (typeof claims === 'string' || claims.role !== 'admin') {
  *       throw new Error('Admin access required');
  *     }
- *     return user;
+ *     return claims;
  *   }
  * });
  *
@@ -439,26 +501,25 @@ export function SignServerResponse(
  * }
  * ```
  */
-export function CreateAuthDecorator<R = unknown, T = unknown>(
-  callbacks: AuthDecoratorCallbacks<T, R>,
-) {
-  const resolvedCallbacks = resolveAuthDecoratorCallbacks(callbacks);
+export function CreateAuthDecorator<R = unknown>(
+  callbacks: DefaultAuthDecoratorCallbacks<R>,
+): AuthDecoratorFactory<AuthClaims, R>;
+export function CreateAuthDecorator<T, R = unknown>(
+  callbacks: CustomAuthDecoratorCallbacks<T, R>,
+): AuthDecoratorFactory<T, R>;
+export function CreateAuthDecorator<T, R>(
+  callbacks:
+    | DefaultAuthDecoratorCallbacks<R>
+    | CustomAuthDecoratorCallbacks<T, R>,
+): AuthDecoratorFactory<AuthClaims, R> | AuthDecoratorFactory<T, R> {
+  if (callbacks.authenticator) {
+    return buildAuthDecorator(
+      resolveAuthDecoratorCallbacks(callbacks, callbacks.authenticator),
+    );
+  }
 
-  return MakeParameterAndPropertyAndClassDecorator(
-    (target, key, index, validator?: AuthValidator<T, R>) => {
-      const authValidator = validator ?? resolvedCallbacks.validator;
-      const provider = createAuthParameterProvider(
-        resolvedCallbacks,
-        authValidator,
-      );
-
-      if (key === undefined) {
-        registerClassParameterProvider(target, provider);
-        return;
-      }
-
-      SetParameterProvider(target, key, index, provider);
-    },
+  return buildAuthDecorator(
+    resolveAuthDecoratorCallbacks(callbacks, ValidateRaw),
   );
 }
 
