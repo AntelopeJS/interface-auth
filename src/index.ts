@@ -191,15 +191,11 @@ interface ClassDecoratorTarget {
 
 function readAuthHeader(req: IncomingMessage): string | undefined {
   const header = req.headers[AuthHeaderName];
-  if (typeof header === "string") {
-    return header;
+  if (Array.isArray(header)) {
+    return header[0];
   }
 
-  if (!header || header.length === 0) {
-    return undefined;
-  }
-
-  return header[0];
+  return header;
 }
 
 function readCookieToken(req: IncomingMessage): string | undefined {

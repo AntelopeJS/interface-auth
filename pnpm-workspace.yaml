@@ -1,0 +1,2 @@
+overrides:
+  "@antelopejs/auth-jwt>@antelopejs/interface-auth": "link:."
