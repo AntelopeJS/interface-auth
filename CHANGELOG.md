@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.1.0
+
+[compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.0.7...v0.1.0)
+
+### 🚀 Enhancements
+
+- **auth:** ⚠️  Tighten the published contract ([#29](https://github.com/AntelopeJS/interface-auth/pull/29))
+
+### 💅 Refactors
+
+- Clean the repo with the guardrail pack ([#26](https://github.com/AntelopeJS/interface-auth/pull/26))
+- Clear avoidable findings with pack 0.2.11 ([#28](https://github.com/AntelopeJS/interface-auth/pull/28))
+
+### 📖 Documentation
+
+- Improve task-based onboarding and contract guidance ([#20](https://github.com/AntelopeJS/interface-auth/pull/20))
+- Clarify learning paths and illustrate real outcomes ([#22](https://github.com/AntelopeJS/interface-auth/pull/22))
+
+### 🏡 Chore
+
+- Adopt the guardrail pack from tooling-configs 0.2.0 ([#23](https://github.com/AntelopeJS/interface-auth/pull/23))
+- Configure Renovate with the shared preset ([#24](https://github.com/AntelopeJS/interface-auth/pull/24))
+
+### ✅ Tests
+
+- **skills:** Add eval cases for auth-interface ([#25](https://github.com/AntelopeJS/interface-auth/pull/25))
+
+#### ⚠️ Breaking Changes
+
+- **auth:** ⚠️  Tighten the published contract ([#29](https://github.com/AntelopeJS/interface-auth/pull/29))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli ([@Upd4ting](http://github.com/Upd4ting))
+
 ## v0.0.7
 
 [compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.0.6...v0.0.7)
