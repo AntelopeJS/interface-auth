@@ -8,11 +8,7 @@ export default defineConfig({
   cacheFolder: ".antelope/cache",
   modules: {
     "auth-jwt": {
-      source: {
-        type: "package",
-        package: "@antelopejs/auth-jwt",
-        version: "1.0.3",
-      },
+      source: { type: "local", path: "node_modules/@antelopejs/auth-jwt" },
       config: { secret: "test-secret-key-for-jwt" },
     },
     mongodb: {

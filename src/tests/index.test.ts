@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { HTTPResult } from "@antelopejs/interface-api";
-import { SignRaw, ValidateRaw } from "@antelopejs/interface-auth";
+import { SignRaw, ValidateRaw } from "..";
 
 interface TestUser {
   id: string;
