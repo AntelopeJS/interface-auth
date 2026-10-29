@@ -213,13 +213,6 @@ interface DefaultAuthDecoratorCallbacks<R> extends AuthDecoratorOptions<
   authenticator?: undefined;
 }
 
-interface OptionalAuthDecoratorCallbacks<T, R> extends AuthDecoratorOptions<
-  T | AuthClaims,
-  R
-> {
-  authenticator?: AuthVerifier<T>;
-}
-
 interface CustomAuthDecoratorCallbacks<T, R> extends AuthDecoratorOptions<
   T,
   R
@@ -472,7 +465,7 @@ export function SignServerResponse(
  *
  * Without `authenticator`, the default one calls {@link ValidateRaw} and the validator
  * receives an {@link AuthClaims}. With an `authenticator`, `T` is whatever it returns,
- * so a parser written there gives the validator a typed value. If the `authenticator` may be `undefined`, the validator receives `T | AuthClaims`.
+ * so a parser written there gives the validator a typed value.
  *
  * @template T - The type of the authenticated data before validation
  * @template R - The type of the final validator result
@@ -514,15 +507,11 @@ export function CreateAuthDecorator<R = unknown>(
 export function CreateAuthDecorator<T, R = unknown>(
   callbacks: CustomAuthDecoratorCallbacks<T, R>,
 ): AuthDecoratorFactory<T, R>;
-export function CreateAuthDecorator<T, R = unknown>(
-  callbacks: OptionalAuthDecoratorCallbacks<T, R>,
-): AuthDecoratorFactory<T | AuthClaims, R>;
 export function CreateAuthDecorator<T, R>(
   callbacks:
     | DefaultAuthDecoratorCallbacks<R>
-    | CustomAuthDecoratorCallbacks<T, R>
-    | OptionalAuthDecoratorCallbacks<T, R>,
-): AuthDecoratorFactory<T | AuthClaims, R> | AuthDecoratorFactory<T, R> {
+    | CustomAuthDecoratorCallbacks<T, R>,
+): AuthDecoratorFactory<AuthClaims, R> | AuthDecoratorFactory<T, R> {
   if (callbacks.authenticator) {
     return buildAuthDecorator(
       resolveAuthDecoratorCallbacks(callbacks, callbacks.authenticator),
