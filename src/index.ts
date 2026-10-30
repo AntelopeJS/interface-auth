@@ -227,10 +227,6 @@ interface ResolvedAuthDecoratorCallbacks<T, R> {
   validator: AuthValidator<T, R> | undefined;
 }
 
-interface ClassDecoratorTarget {
-  prototype: object;
-}
-
 function readAuthHeader(req: IncomingMessage): string | undefined {
   const header = req.headers[AuthHeaderName];
   if (Array.isArray(header)) {
@@ -302,18 +298,6 @@ function createAuthParameterProvider<T, R>(
     });
 }
 
-function registerClassParameterProvider<T, R>(
-  target: ClassDecoratorTarget,
-  provider: AuthParameterProvider<T, R>,
-): void {
-  SetParameterProvider(
-    target.prototype,
-    Symbol(ClassParameterProviderSymbolDescription),
-    undefined,
-    provider,
-  );
-}
-
 function buildAuthDecorator<T, R>(
   callbacks: ResolvedAuthDecoratorCallbacks<T, R>,
 ) {
@@ -323,7 +307,12 @@ function buildAuthDecorator<T, R>(
       const provider = createAuthParameterProvider(callbacks, authValidator);
 
       if (key === undefined) {
-        registerClassParameterProvider(target, provider);
+        SetParameterProvider(
+          target.prototype,
+          Symbol(ClassParameterProviderSymbolDescription),
+          undefined,
+          provider,
+        );
         return;
       }
 
