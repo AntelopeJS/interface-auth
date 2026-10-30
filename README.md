@@ -72,12 +72,14 @@ A request to `GET /session/me` without a valid token fails before the handler ru
 
 Use with `@antelopejs/core` 1.x and the following peer dependencies:
 
-<!-- docs-compat: ./package.json#peerDependencies -->
+<!-- antelopejs-docs-compat:start -->
 
-| Package                      | Range             |
-| ---------------------------- | ----------------- |
-| `@antelopejs/interface-api`  | `>=0.0.15 <1.0.0` |
-| `@antelopejs/interface-core` | `>=0.2.4 <1.0.0`  |
+| Package                      | Supported         | Tested with |
+| ---------------------------- | ----------------- | ----------- |
+| `@antelopejs/interface-api`  | `>=0.0.15 <1.0.0` | `0.0.15`    |
+| `@antelopejs/interface-core` | `>=0.2.4 <1.0.0`  | `0.2.4`     |
+
+<!-- antelopejs-docs-compat:end -->
 
 ## Contributing
 
