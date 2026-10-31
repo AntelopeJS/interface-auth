@@ -124,6 +124,49 @@ export interface CookieOptions {
   secure?: boolean;
 }
 
+type TimeSpanUnit =
+  | "Years"
+  | "Year"
+  | "Yrs"
+  | "Yr"
+  | "Y"
+  | "Weeks"
+  | "Week"
+  | "W"
+  | "Days"
+  | "Day"
+  | "D"
+  | "Hours"
+  | "Hour"
+  | "Hrs"
+  | "Hr"
+  | "H"
+  | "Minutes"
+  | "Minute"
+  | "Mins"
+  | "Min"
+  | "M"
+  | "Seconds"
+  | "Second"
+  | "Secs"
+  | "Sec"
+  | "s"
+  | "Milliseconds"
+  | "Millisecond"
+  | "Msecs"
+  | "Msec"
+  | "Ms";
+
+/**
+ * A timespan string in the grammar of the `ms` package: a number, optionally
+ * followed by a unit in any case, with or without a space (`"90"`, `"2h"`,
+ * `"7 days"`). A bare number string counts milliseconds.
+ */
+export type TimeSpan =
+  | `${number}`
+  | `${number}${TimeSpanUnit | Uppercase<TimeSpanUnit> | Lowercase<TimeSpanUnit>}`
+  | `${number} ${TimeSpanUnit | Uppercase<TimeSpanUnit> | Lowercase<TimeSpanUnit>}`;
+
 /**
  * Options for signing authentication tokens.
  *
@@ -140,14 +183,14 @@ export interface CookieOptions {
  */
 export interface SignOptions {
   /**
-   * Expiration as a number of seconds or a timespan string.
+   * Expiration as a number of seconds or a {@link TimeSpan}.
    */
-  expiresIn?: string | number;
+  expiresIn?: number | TimeSpan;
 
   /**
-   * Not-before field as a number of seconds or a timespan string.
+   * Not-before field as a number of seconds or a {@link TimeSpan}.
    */
-  notBefore?: string | number;
+  notBefore?: number | TimeSpan;
 }
 
 /**
@@ -182,7 +225,10 @@ export interface VerifyOptions {
   maxAge?: string | number;
 }
 
-type AuthPayload = string | Buffer | JsonObject;
+/**
+ * What a token signs: a string, a `Buffer`, or a {@link JsonObject}.
+ */
+export type AuthPayload = string | Buffer | JsonObject;
 type VerifyInterfaceHandler = (
   data?: string,
   options?: VerifyOptions,
