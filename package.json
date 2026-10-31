@@ -1,6 +1,6 @@
 {
   "name": "@antelopejs/interface-auth",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "AntelopeJS interface for token authentication: sign and verify tokens and inject the verified payload into API handlers",
   "keywords": [
     "antelopejs",
