@@ -70,7 +70,7 @@ A request to `GET /session/me` without a valid token fails before the handler ru
 
 ## Compatibility
 
-Use with `@antelopejs/core` 1.x and the following peer dependencies:
+The module declares these peer dependencies:
 
 <!-- antelopejs-docs-compat:start -->
 
