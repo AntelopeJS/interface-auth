@@ -211,7 +211,7 @@ type _ValidateAnswer = Assert<Identical<Answer<typeof Api.ValidateRaw>, string |
 type _Claims = Assert<Identical<Api.AuthClaims, string | Api.JsonObject>>;
 type _Value = Assert<Identical<Api.JsonValue, string | number | boolean | null | Api.JsonValue[] | Api.JsonObject>>;
 type _Object = Assert<Identical<Api.JsonObject, { [key: string]: Api.JsonValue | undefined }>>;
-type _SignOptions = Assert<Identical<Api.SignOptions, { expiresIn?: string | number; notBefore?: string | number }>>;
+type _SignOptions = Assert<Identical<Api.SignOptions, { expiresIn?: number | Api.TimeSpan; notBefore?: number | Api.TimeSpan }>>;
 type _VerifyOptions = Assert<Identical<Api.VerifyOptions, { ignoreExpiration?: boolean; ignoreNotBefore?: boolean; maxAge?: string | number }>>;
 `;
 
