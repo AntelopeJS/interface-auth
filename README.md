@@ -76,7 +76,7 @@ The module declares these peer dependencies:
 
 | Package                      | Supported         | Tested with                                               |
 | ---------------------------- | ----------------- | --------------------------------------------------------- |
-| `@antelopejs/interface-api`  | `>=0.0.15 <1.0.0` | `file:.campaign/tgz/antelopejs-interface-api-11c035a.tgz` |
+| `@antelopejs/interface-api`  | `>=0.0.15 <1.0.0` | `file:.campaign/tgz/antelopejs-interface-api-f2a99b5.tgz` |
 | `@antelopejs/interface-core` | `>=0.2.4 <1.0.0`  | `0.2.4`                                                   |
 
 <!-- antelopejs-docs-compat:end -->

@@ -59,7 +59,7 @@
   "devDependencies": {
     "@antelopejs/auth-jwt": "1.0.3",
     "@antelopejs/core": "^1.16.0",
-    "@antelopejs/interface-api": "file:.campaign/tgz/antelopejs-interface-api-11c035a.tgz",
+    "@antelopejs/interface-api": "file:.campaign/tgz/antelopejs-interface-api-f2a99b5.tgz",
     "@antelopejs/interface-core": "^0.2.4",
     "@antelopejs/tooling-configs": "^0.2.17",
     "@types/chai": "^4.3.20",
@@ -86,7 +86,7 @@
   "packageManager": "pnpm@10.6.5",
   "pnpm": {
     "overrides": {
-      "@antelopejs/interface-api": "file:.campaign/tgz/antelopejs-interface-api-11c035a.tgz",
+      "@antelopejs/interface-api": "file:.campaign/tgz/antelopejs-interface-api-f2a99b5.tgz",
       "@antelopejs/auth-jwt>@antelopejs/interface-auth": "link:."
     }
   },
