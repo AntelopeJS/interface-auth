@@ -1,2 +1,3 @@
 overrides:
   "@antelopejs/auth-jwt>@antelopejs/interface-auth": "link:."
+  "@antelopejs/interface-api": "file:.campaign/tgz/antelopejs-interface-api-11c035a.tgz"
