@@ -1,7 +1,11 @@
 import { InterfaceFunction } from "@antelopejs/interface-core";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { SetParameterProvider } from "@antelopejs/interface-api";
-import { MakeParameterAndPropertyAndClassDecorator } from "@antelopejs/interface-core/decorators";
+import {
+  type Class,
+  type DecoratorTarget,
+  MakeParameterAndPropertyAndClassDecorator,
+} from "@antelopejs/interface-core/decorators";
 
 const AuthHeaderName = "x-antelopejs-auth";
 const AuthCookieName = "ANTELOPEJS_AUTH";
@@ -344,6 +348,25 @@ function createAuthParameterProvider<T, R>(
     });
 }
 
+function isDecoratorTarget(value: unknown): value is DecoratorTarget {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "constructor" in value &&
+    typeof value.constructor === "function"
+  );
+}
+
+/** The prototype of the class a class decorator receives, where its handlers' parameters live. */
+function classPrototype(target: Class | DecoratorTarget): DecoratorTarget {
+  const prototype: unknown =
+    "prototype" in target ? target.prototype : undefined;
+  if (!isDecoratorTarget(prototype)) {
+    throw new TypeError("A class decorator applies to a class.");
+  }
+  return prototype;
+}
+
 function buildAuthDecorator<T, R>(
   callbacks: ResolvedAuthDecoratorCallbacks<T, R>,
 ) {
@@ -354,7 +377,7 @@ function buildAuthDecorator<T, R>(
 
       if (key === undefined) {
         SetParameterProvider(
-          target.prototype,
+          classPrototype(target),
           Symbol(ClassParameterProviderSymbolDescription),
           undefined,
           provider,

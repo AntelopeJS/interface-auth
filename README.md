@@ -74,10 +74,10 @@ The module declares these peer dependencies:
 
 <!-- antelopejs-docs-compat:start -->
 
-| Package                      | Supported         | Tested with                                               |
-| ---------------------------- | ----------------- | --------------------------------------------------------- |
-| `@antelopejs/interface-api`  | `>=0.0.15 <1.0.0` | `file:.campaign/tgz/antelopejs-interface-api-f2a99b5.tgz` |
-| `@antelopejs/interface-core` | `>=0.2.4 <1.0.0`  | `0.2.4`                                                   |
+| Package                      | Supported         | Tested with                                                |
+| ---------------------------- | ----------------- | ---------------------------------------------------------- |
+| `@antelopejs/interface-api`  | `>=0.0.15 <1.0.0` | `file:.campaign/tgz/antelopejs-interface-api-2d1cc37.tgz`  |
+| `@antelopejs/interface-core` | `>=0.2.4 <1.0.0`  | `file:.campaign/tgz/antelopejs-interface-core-6a8b526.tgz` |
 
 <!-- antelopejs-docs-compat:end -->
 
