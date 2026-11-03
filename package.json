@@ -95,6 +95,9 @@
     "test": "src/antelope.test.ts",
     "skills": [
       "./skills"
-    ]
+    ],
+    "docs": {
+      "standard": true
+    }
   }
 }
