@@ -61,6 +61,8 @@ export class SessionController extends Controller("/session") {
 
 A request to `GET /session/me` without a valid token fails before the handler runs. Send the token unchanged in `x-antelopejs-auth`, without a `Bearer ` prefix. The `login` method only shows signing. In a real application, check the credentials before you issue a token.
 
+The `Session` annotation describes the payload the application expects. It does not check it, so `session.id` is whatever the verified token carries. Add a [shape-checking verifier](./docs/2.authentication.md#create-a-custom-verifier) before you rely on claims from tokens whose format nothing enforces.
+
 ## Documentation
 
 - [Introduction](./docs/1.introduction.md)
