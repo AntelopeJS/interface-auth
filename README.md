@@ -1,10 +1,10 @@
-# @antelopejs/interface-auth
+# `@antelopejs/interface-auth`
 
 <div align="center">
-<a href="https://www.npmjs.com/package/@antelopejs/interface-auth"><img alt="npm" src="https://img.shields.io/npm/v/@antelopejs/interface-auth?style=for-the-badge&labelColor=000000&color=000000"></a>
-<a href="./LICENSE"><img alt="License" src="https://img.shields.io/npm/l/@antelopejs/interface-auth?style=for-the-badge&labelColor=000000&color=000000"></a>
-<a href="https://discord.gg/g4pFt6eXqu"><img alt="Discord" src="https://img.shields.io/badge/Discord-18181B?logo=discord&style=for-the-badge&color=000000"></a>
-<a href="https://interfaces.antelopejs.com/docs/auth"><img alt="Docs" src="https://img.shields.io/badge/Docs-18181B?style=for-the-badge&color=000000"></a>
+<a href="https://www.npmjs.com/package/@antelopejs/interface-auth"><img data-illustration alt="npm" src="https://img.shields.io/npm/v/@antelopejs/interface-auth?style=for-the-badge&labelColor=000000&color=000000"></a>
+<a href="./LICENSE"><img data-illustration alt="License" src="https://img.shields.io/npm/l/@antelopejs/interface-auth?style=for-the-badge&labelColor=000000&color=000000"></a>
+<a href="https://discord.gg/g4pFt6eXqu"><img data-illustration alt="Discord" src="https://img.shields.io/badge/Discord-18181B?logo=discord&style=for-the-badge&color=000000"></a>
+<a href="https://interfaces.antelopejs.com/docs/auth"><img data-illustration alt="Docs" src="https://img.shields.io/badge/Docs-18181B?style=for-the-badge&color=000000"></a>
 </div>
 
 The AntelopeJS contract for token authentication: sign and verify tokens, and inject the verified payload into API handlers with a decorator.
@@ -13,8 +13,8 @@ The AntelopeJS contract for token authentication: sign and verify tokens, and in
 
 - `SignRaw` and `ValidateRaw` sign a payload into a token and verify a token back into its payload.
 - `SignServerResponse` signs a payload and attaches the token to a response as a cookie.
-- `@Authentication()` reads the token from the `x-antelopejs-auth` header, falling back to the `ANTELOPEJS_AUTH` cookie when the header is absent, verifies it and injects the payload into a handler parameter.
-- `CreateAuthDecorator` builds your own decorator with a custom source, verifier and validator.
+- `@Authentication()` reads the token from the `x-antelopejs-auth` header, or from the `ANTELOPEJS_AUTH` cookie when the header is absent. It verifies the token and injects the payload into a handler parameter.
+- `CreateAuthDecorator` builds your own decorator with a custom source, verifier, and validator.
 
 ## Implementations
 
@@ -59,7 +59,7 @@ export class SessionController extends Controller("/session") {
 }
 ```
 
-A request to `GET /session/me` without a valid token fails before the handler runs. Send the token unchanged in `x-antelopejs-auth`, without a `Bearer ` prefix. The login method only demonstrates signing; validate credentials before issuing tokens in a real application.
+A request to `GET /session/me` without a valid token fails before the handler runs. Send the token unchanged in `x-antelopejs-auth`, without a `Bearer ` prefix. The `login` method only shows signing. In a real application, check the credentials before you issue a token.
 
 ## Documentation
 
