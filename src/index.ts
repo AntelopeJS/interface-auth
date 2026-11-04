@@ -1,7 +1,11 @@
 import { InterfaceFunction } from "@antelopejs/interface-core";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { SetParameterProvider } from "@antelopejs/interface-api";
-import { MakeParameterAndPropertyAndClassDecorator } from "@antelopejs/interface-core/decorators";
+import {
+  type Class,
+  type DecoratorTarget,
+  MakeParameterAndPropertyAndClassDecorator,
+} from "@antelopejs/interface-core/decorators";
 
 const AuthHeaderName = "x-antelopejs-auth";
 const AuthCookieName = "ANTELOPEJS_AUTH";
@@ -124,6 +128,49 @@ export interface CookieOptions {
   secure?: boolean;
 }
 
+type TimeSpanUnit =
+  | "Years"
+  | "Year"
+  | "Yrs"
+  | "Yr"
+  | "Y"
+  | "Weeks"
+  | "Week"
+  | "W"
+  | "Days"
+  | "Day"
+  | "D"
+  | "Hours"
+  | "Hour"
+  | "Hrs"
+  | "Hr"
+  | "H"
+  | "Minutes"
+  | "Minute"
+  | "Mins"
+  | "Min"
+  | "M"
+  | "Seconds"
+  | "Second"
+  | "Secs"
+  | "Sec"
+  | "s"
+  | "Milliseconds"
+  | "Millisecond"
+  | "Msecs"
+  | "Msec"
+  | "Ms";
+
+/**
+ * A timespan string in the grammar of the `ms` package: a number, optionally
+ * followed by a unit in any case, with or without a space (`"90"`, `"2h"`,
+ * `"7 days"`). A bare number string counts milliseconds.
+ */
+export type TimeSpan =
+  | `${number}`
+  | `${number}${TimeSpanUnit | Uppercase<TimeSpanUnit> | Lowercase<TimeSpanUnit>}`
+  | `${number} ${TimeSpanUnit | Uppercase<TimeSpanUnit> | Lowercase<TimeSpanUnit>}`;
+
 /**
  * Options for signing authentication tokens.
  *
@@ -140,14 +187,14 @@ export interface CookieOptions {
  */
 export interface SignOptions {
   /**
-   * Expiration as a number of seconds or a timespan string.
+   * Expiration as a number of seconds or a {@link TimeSpan}.
    */
-  expiresIn?: string | number;
+  expiresIn?: number | TimeSpan;
 
   /**
-   * Not-before field as a number of seconds or a timespan string.
+   * Not-before field as a number of seconds or a {@link TimeSpan}.
    */
-  notBefore?: string | number;
+  notBefore?: number | TimeSpan;
 }
 
 /**
@@ -182,7 +229,10 @@ export interface VerifyOptions {
   maxAge?: string | number;
 }
 
-type AuthPayload = string | Buffer | JsonObject;
+/**
+ * What a token signs: a string, a `Buffer`, or a {@link JsonObject}.
+ */
+export type AuthPayload = string | Buffer | JsonObject;
 type VerifyInterfaceHandler = (
   data?: string,
   options?: VerifyOptions,
@@ -225,10 +275,6 @@ interface ResolvedAuthDecoratorCallbacks<T, R> {
   authenticator: AuthVerifier<T>;
   authenticatorOptions: VerifyOptions;
   validator: AuthValidator<T, R> | undefined;
-}
-
-interface ClassDecoratorTarget {
-  prototype: object;
 }
 
 function readAuthHeader(req: IncomingMessage): string | undefined {
@@ -302,16 +348,23 @@ function createAuthParameterProvider<T, R>(
     });
 }
 
-function registerClassParameterProvider<T, R>(
-  target: ClassDecoratorTarget,
-  provider: AuthParameterProvider<T, R>,
-): void {
-  SetParameterProvider(
-    target.prototype,
-    Symbol(ClassParameterProviderSymbolDescription),
-    undefined,
-    provider,
+function isDecoratorTarget(value: unknown): value is DecoratorTarget {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "constructor" in value &&
+    typeof value.constructor === "function"
   );
+}
+
+/** The prototype of the class a class decorator receives, where its handlers' parameters live. */
+function classPrototype(target: Class | DecoratorTarget): DecoratorTarget {
+  const prototype: unknown =
+    "prototype" in target ? target.prototype : undefined;
+  if (!isDecoratorTarget(prototype)) {
+    throw new TypeError("A class decorator applies to a class.");
+  }
+  return prototype;
 }
 
 function buildAuthDecorator<T, R>(
@@ -323,7 +376,12 @@ function buildAuthDecorator<T, R>(
       const provider = createAuthParameterProvider(callbacks, authValidator);
 
       if (key === undefined) {
-        registerClassParameterProvider(target, provider);
+        SetParameterProvider(
+          classPrototype(target),
+          Symbol(ClassParameterProviderSymbolDescription),
+          undefined,
+          provider,
+        );
         return;
       }
 
