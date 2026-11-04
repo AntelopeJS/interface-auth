@@ -9,6 +9,8 @@
 
 The AntelopeJS contract for token authentication: sign and verify tokens, and inject the verified payload into API handlers with a decorator.
 
+Part of [AntelopeJS](https://github.com/AntelopeJS/antelopejs), the TypeScript framework where modules depend on contracts and the application chooses the provider. Built by the team behind [AntelopeJS DMS](https://github.com/AntelopeJS/dms).
+
 ## What it offers
 
 - `SignRaw` and `ValidateRaw` sign a payload into a token and verify a token back into its payload.
