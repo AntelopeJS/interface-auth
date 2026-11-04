@@ -6,7 +6,6 @@ settings:
 
 overrides:
   '@antelopejs/auth-jwt>@antelopejs/interface-auth': link:.
-  '@antelopejs/interface-core': 0.4.0
 
 importers:
 
@@ -16,13 +15,13 @@ importers:
         specifier: 1.0.3
         version: 1.0.3
       '@antelopejs/core':
-        specifier: ^1.16.0
-        version: 1.16.0
+        specifier: ^1.20.0
+        version: 1.20.0
       '@antelopejs/interface-api':
         specifier: ^0.2.0
         version: 0.2.0(@antelopejs/interface-core@0.4.0)
       '@antelopejs/interface-core':
-        specifier: 0.4.0
+        specifier: ^0.4.0
         version: 0.4.0
       '@antelopejs/tooling-configs':
         specifier: ^0.2.17
@@ -81,15 +80,15 @@ packages:
   '@antelopejs/auth-jwt@1.0.3':
     resolution: {integrity: sha512-/4jrTpFjQjn5W74/00U3ftyI8xQouhX+uhiOk5+cWsS+3zvhfO4WfJ0TRta+MaPhqyOISucH2IYf402JtSyOSw==}
 
-  '@antelopejs/core@1.16.0':
-    resolution: {integrity: sha512-dj1R8xPgLzkTksfenPNh3kX1fffRnWktielk1yad/4/1wTEMhkPSx1WQ/4QI98d95L6Th0EMGTV/U4o84p/2yw==}
-    engines: {node: '>=20.19'}
+  '@antelopejs/core@1.20.0':
+    resolution: {integrity: sha512-7clqf/n8aUi4iCwMG0G2dWLQCwzy9ZxTLHLmOIEtfObw5wuN06s0+n57Zzjr3wbIyR2wD3Q4AeorqJ94QidIfg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
   '@antelopejs/interface-api@0.2.0':
     resolution: {integrity: sha512-N7HGrJjJLIR/EN2QSYEAvMdYa9A13XWBoCxWJhy+BlilcIC+3fZySAE9sfQVUwb26Dg/6St+BY2RV0OufgvE1A==}
     peerDependencies:
-      '@antelopejs/interface-core': 0.4.0
+      '@antelopejs/interface-core': '>=0.4.0 <1.0.0'
 
   '@antelopejs/interface-core@0.4.0':
     resolution: {integrity: sha512-IPX6dtt3KHknclN4mLOYeRYL2Odz1Pts+dtaZul62NghsBUX/0OFHD4Qhoaf+Beva4hjInbaF918ajr4Z5HVWQ==}
@@ -2778,7 +2777,7 @@ snapshots:
       jsonwebtoken: 9.0.3
       mocha: 11.8.0
 
-  '@antelopejs/core@1.16.0':
+  '@antelopejs/core@1.20.0':
     dependencies:
       '@antelopejs/interface-core': 0.4.0
       '@clack/prompts': 1.8.1
