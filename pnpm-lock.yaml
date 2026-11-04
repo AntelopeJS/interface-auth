@@ -7,6 +7,7 @@ settings:
 overrides:
   '@antelopejs/interface-api': file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz
   '@antelopejs/auth-jwt>@antelopejs/interface-auth': link:.
+  '@antelopejs/interface-core': 0.4.0
 
 importers:
 
@@ -23,7 +24,7 @@ importers:
         specifier: ^1.16.0
         version: 1.16.0
       '@antelopejs/interface-core':
-        specifier: ^0.4.0
+        specifier: 0.4.0
         version: 0.4.0
       '@antelopejs/tooling-configs':
         specifier: ^0.2.17
@@ -91,10 +92,7 @@ packages:
     resolution: {integrity: sha512-G7BRef+991Dn+O4zmxGE8f8KN5Xfj5GQa+W3LQo0f+XHhRUCz2E+brTIonhjV7HJ5Z+lFNrm4StPytwNIUxA5Q==, tarball: file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz}
     version: 0.3.0
     peerDependencies:
-      '@antelopejs/interface-core': '>=0.4.0 <1.0.0'
-
-  '@antelopejs/interface-core@0.2.7':
-    resolution: {integrity: sha512-2zWWTxSMutyqVbnr/xfGtjgIcx2x4zLZk6wOQkXDgX+i0DVPw6DOE/nsUHGP4uGrVAYg6b1z4oLdTV1NMAyZjA==}
+      '@antelopejs/interface-core': 0.4.0
 
   '@antelopejs/interface-core@0.4.0':
     resolution: {integrity: sha512-IPX6dtt3KHknclN4mLOYeRYL2Odz1Pts+dtaZul62NghsBUX/0OFHD4Qhoaf+Beva4hjInbaF918ajr4Z5HVWQ==}
@@ -2785,7 +2783,7 @@ snapshots:
 
   '@antelopejs/core@1.16.0':
     dependencies:
-      '@antelopejs/interface-core': 0.2.7
+      '@antelopejs/interface-core': 0.4.0
       '@clack/prompts': 1.8.1
       '@types/proper-lockfile': 4.1.4
       commander: 13.1.0
@@ -2801,10 +2799,6 @@ snapshots:
   '@antelopejs/interface-api@file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz(@antelopejs/interface-core@0.4.0)':
     dependencies:
       '@antelopejs/interface-core': 0.4.0
-
-  '@antelopejs/interface-core@0.2.7':
-    dependencies:
-      reflect-metadata: 0.2.2
 
   '@antelopejs/interface-core@0.4.0':
     dependencies:
