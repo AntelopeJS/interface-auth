@@ -7,7 +7,7 @@ settings:
 overrides:
   '@antelopejs/interface-api': file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz
   '@antelopejs/auth-jwt>@antelopejs/interface-auth': link:.
-  '@antelopejs/interface-core': file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz
+  '@antelopejs/interface-core': 0.4.0
 
 importers:
 
@@ -15,10 +15,7 @@ importers:
     dependencies:
       '@antelopejs/interface-api':
         specifier: file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz
-        version: file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz(@antelopejs/interface-core@file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz)
-      '@antelopejs/interface-core':
-        specifier: file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz
-        version: file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz
+        version: file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz(@antelopejs/interface-core@0.4.0)
     devDependencies:
       '@antelopejs/auth-jwt':
         specifier: 1.0.3
@@ -26,6 +23,9 @@ importers:
       '@antelopejs/core':
         specifier: ^1.16.0
         version: 1.16.0
+      '@antelopejs/interface-core':
+        specifier: 0.4.0
+        version: 0.4.0
       '@antelopejs/tooling-configs':
         specifier: ^0.2.17
         version: 0.2.17(eslint-plugin-perfectionist@5.11.0(eslint@10.10.0(jiti@2.7.0))(typescript@5.9.3))(knip@6.34.0)(oxfmt@0.66.0)(oxlint@1.81.0(oxlint-tsgolint@7.0.2001))
@@ -92,11 +92,10 @@ packages:
     resolution: {integrity: sha512-G7BRef+991Dn+O4zmxGE8f8KN5Xfj5GQa+W3LQo0f+XHhRUCz2E+brTIonhjV7HJ5Z+lFNrm4StPytwNIUxA5Q==, tarball: file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz}
     version: 0.3.0
     peerDependencies:
-      '@antelopejs/interface-core': '>=0.4.0 <1.0.0'
+      '@antelopejs/interface-core': 0.4.0
 
-  '@antelopejs/interface-core@file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz':
-    resolution: {integrity: sha512-ur2KLvtD8h4SCZ0VSoQDc1pg+E9Bk/py3EW3qHHdoo3i6RvKWrrDKsX2khVdqQESuF2QMc1sJ6B+7ISjx5TvpQ==, tarball: file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz}
-    version: 0.4.0
+  '@antelopejs/interface-core@0.4.0':
+    resolution: {integrity: sha512-IPX6dtt3KHknclN4mLOYeRYL2Odz1Pts+dtaZul62NghsBUX/0OFHD4Qhoaf+Beva4hjInbaF918ajr4Z5HVWQ==}
 
   '@antelopejs/tooling-configs@0.2.17':
     resolution: {integrity: sha512-8fwh7xQPzazP/l/ivEwRKpfN8qShV9+PRizpI9cBewe2TwoRPu4n95w6sYSlygiRmm0HxLJYZFhmSPRgtiNo1Q==}
@@ -2775,16 +2774,16 @@ snapshots:
 
   '@antelopejs/auth-jwt@1.0.3':
     dependencies:
-      '@antelopejs/interface-api': file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz(@antelopejs/interface-core@file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz)
+      '@antelopejs/interface-api': file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz(@antelopejs/interface-core@0.4.0)
       '@antelopejs/interface-auth': 'link:'
-      '@antelopejs/interface-core': file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz
+      '@antelopejs/interface-core': 0.4.0
       chai: 4.5.0
       jsonwebtoken: 9.0.3
       mocha: 11.8.0
 
   '@antelopejs/core@1.16.0':
     dependencies:
-      '@antelopejs/interface-core': file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz
+      '@antelopejs/interface-core': 0.4.0
       '@clack/prompts': 1.8.1
       '@types/proper-lockfile': 4.1.4
       commander: 13.1.0
@@ -2797,11 +2796,11 @@ snapshots:
       semver: 7.7.4
       typescript: 5.9.3
 
-  '@antelopejs/interface-api@file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz(@antelopejs/interface-core@file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz)':
+  '@antelopejs/interface-api@file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz(@antelopejs/interface-core@0.4.0)':
     dependencies:
-      '@antelopejs/interface-core': file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz
+      '@antelopejs/interface-core': 0.4.0
 
-  '@antelopejs/interface-core@file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz':
+  '@antelopejs/interface-core@0.4.0':
     dependencies:
       reflect-metadata: 0.2.2
 

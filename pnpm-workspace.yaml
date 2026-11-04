@@ -1,4 +1,4 @@
 overrides:
   "@antelopejs/auth-jwt>@antelopejs/interface-auth": "link:."
   "@antelopejs/interface-api": "file:.campaign/tgz/antelopejs-interface-api-015a93a.tgz"
-  "@antelopejs/interface-core": "file:.campaign/tgz/antelopejs-interface-core-f7df541.tgz"
+  "@antelopejs/interface-core": "0.4.0"
