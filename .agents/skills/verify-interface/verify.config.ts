@@ -283,13 +283,11 @@ const config: VerifyConfig<typeof AuthInterface> = {
     format: {
       globs: ["src/index.ts"],
       funnels: [],
-      containments: ["cookies/sign-server-response"],
       why: "the x-antelopejs-auth header name, the ANTELOPEJS_AUTH cookie name and the cookie attribute syntax are what browsers and clients already hold",
     },
     contract: {
       globs: ["src/index.ts", "package.json"],
       funnels: [],
-      containments: [],
       why: "SignRaw, ValidateRaw, SignServerResponse, CreateAuthDecorator, Authentication and their types are what every authenticating module imports",
     },
     outbound: null,
@@ -297,7 +295,6 @@ const config: VerifyConfig<typeof AuthInterface> = {
     publish: {
       globs: ["package.json", ".release-it.json", "changelogen.config.json", ".github/workflows/release.yml"],
       funnels: [],
-      containments: [],
       why: "the package name and release workflow claim @antelopejs/interface-auth on npm",
     },
   },
