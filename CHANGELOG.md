@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.2.0
+
+[compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.1.0...v0.2.0)
+
+### 🚀 Enhancements
+
+- **skills:** Add the verify-interface verification skill ([#30](https://github.com/AntelopeJS/interface-auth/pull/30))
+
+### 📖 Documentation
+
+- **readme:** Use one Discord invite ([#35](https://github.com/AntelopeJS/interface-auth/pull/35))
+- **github:** Send questions and ideas to Discord ([#39](https://github.com/AntelopeJS/interface-auth/pull/39))
+- **readme:** Link the package to AntelopeJS and AntelopeJS DMS ([cc50115](https://github.com/AntelopeJS/interface-auth/commit/cc50115))
+
+### 📦 Build
+
+- **deps:** Bump @antelopejs/tooling-configs to 0.2.17 ([#31](https://github.com/AntelopeJS/interface-auth/pull/31))
+
+### 🏡 Chore
+
+- Land the cleanup campaign on main ([#49](https://github.com/AntelopeJS/interface-auth/pull/49))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli ([@Upd4ting](http://github.com/Upd4ting))
+
 ## v0.1.0
 
 [compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.0.7...v0.1.0)
