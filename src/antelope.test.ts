@@ -1,7 +1,4 @@
-import { MongoMemoryServer } from "mongodb-memory-server-core";
 import { defineConfig } from "@antelopejs/interface-core/config";
-
-let mongod: MongoMemoryServer;
 
 export default defineConfig({
   name: "interface-auth-test",
@@ -10,13 +7,6 @@ export default defineConfig({
     "auth-jwt": {
       source: { type: "local", path: "node_modules/@antelopejs/auth-jwt" },
       config: { secret: "test-secret-key-for-jwt" },
-    },
-    mongodb: {
-      source: {
-        type: "package",
-        package: "@antelopejs/mongodb",
-        version: "1.3.1",
-      },
     },
     api: {
       source: {
@@ -32,18 +22,5 @@ export default defineConfig({
   },
   test: {
     folder: "dist/tests",
-    async setup() {
-      mongod = await MongoMemoryServer.create();
-      return {
-        modules: {
-          mongodb: {
-            config: { url: mongod.getUri(), database: "antelopejs_test" },
-          },
-        },
-      };
-    },
-    async cleanup() {
-      await mongod.stop();
-    },
   },
 });
