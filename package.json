@@ -70,7 +70,6 @@
     "eslint-plugin-perfectionist": "^5.11.0",
     "knip": "^6.34.0",
     "lefthook": "^2.2.2",
-    "mongodb-memory-server-core": "^10.4.3",
     "oxfmt": "^0.66.0",
     "oxlint": "1.81.0",
     "oxlint-tsgolint": "^7.0.2001",
