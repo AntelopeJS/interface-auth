@@ -5,10 +5,15 @@ import type * as AuthInterface from "../../../src/index.ts";
 
 type PlainJson = Parameters<typeof equal>[2];
 
+/** Narrows a JSON value to its object member: every other member is a primitive, `null` or an array. */
+function isJsonObject(value: AuthInterface.JsonValue): value is AuthInterface.JsonObject {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 /** Copies a value of the interface's JSON types into the pack's, dropping the `undefined` members the interface allows. */
 function plain(value: AuthInterface.JsonValue): PlainJson {
   if (Array.isArray(value)) return value.map(plain);
-  if (!(value instanceof Object)) return value;
+  if (!isJsonObject(value)) return value;
   return Object.fromEntries(Object.entries(value).flatMap(([key, member]) => (member === undefined ? [] : [[key, plain(member)] as const])));
 }
 
