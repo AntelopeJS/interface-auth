@@ -1,5 +1,37 @@
 # Changelog
 
+## v0.2.1
+
+[compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.2.0...v0.2.1)
+
+### 🔥 Performance
+
+- **test:** Drop the unused MongoDB module from the test project ([#57](https://github.com/AntelopeJS/interface-auth/pull/57))
+- **build:** Skip the lib check in build; typecheck keeps it ([#59](https://github.com/AntelopeJS/interface-auth/pull/59))
+
+### 📦 Build
+
+- **deps:** Bump @antelopejs packages to the 2026-11-06 releases ([#56](https://github.com/AntelopeJS/interface-auth/pull/56))
+- **deps:** Bump @antelopejs/tooling-configs to 0.4.0 ([#60](https://github.com/AntelopeJS/interface-auth/pull/60))
+- **deps:** Bump @antelopejs/tooling-configs to 0.5.0 ([#62](https://github.com/AntelopeJS/interface-auth/pull/62))
+- **deps:** Bump @antelopejs/tooling-configs to 0.5.1 ([#64](https://github.com/AntelopeJS/interface-auth/pull/64))
+
+### 🏡 Chore
+
+- Land the cleanup campaign on main ([#52](https://github.com/AntelopeJS/interface-auth/pull/52))
+- **verify:** Remove seeded runs from the verification skill ([#53](https://github.com/AntelopeJS/interface-auth/pull/53))
+- **ci:** Remove the weekly mutation caller ([#54](https://github.com/AntelopeJS/interface-auth/pull/54))
+
+### 🤖 CI
+
+- Call ci-node.yml@v1 ([#55](https://github.com/AntelopeJS/interface-auth/pull/55))
+- Cache the test project's installed modules between runs ([#58](https://github.com/AntelopeJS/interface-auth/pull/58))
+- Call the shared modules-update workflow ([#61](https://github.com/AntelopeJS/interface-auth/pull/61))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli ([@Upd4ting](http://github.com/Upd4ting))
+
 ## v0.2.0
 
 [compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.1.0...v0.2.0)
