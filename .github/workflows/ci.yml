@@ -23,6 +23,7 @@ jobs:
         src/antelope.test.ts
         antelope-lock/**
       test-job: true
+      windows: true
     permissions:
       contents: read
   renovate-sync:
