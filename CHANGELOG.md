@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.2.2
+
+[compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.2.1...v0.2.2)
+
+### 📖 Documentation
+
+- **readme:** Adopt the AntelopeJS framework README style ([#65](https://github.com/AntelopeJS/interface-auth/pull/65))
+
+### 📦 Build
+
+- Move to @antelopejs/tooling-configs 0.8 and the three-tier CI ([#69](https://github.com/AntelopeJS/interface-auth/pull/69))
+
+### 🏡 Chore
+
+- **deps:** Cap @antelopejs ranges below the next minor on tooling-configs 0.7.1 ([#67](https://github.com/AntelopeJS/interface-auth/pull/67))
+
+### 🤖 CI
+
+- Run the checks on Windows beside Linux ([#66](https://github.com/AntelopeJS/interface-auth/pull/66))
+- Remove the nightly modules-update workflow ([#68](https://github.com/AntelopeJS/interface-auth/pull/68))
+
+#### ⚠️ Breaking Changes
+
+- **deps:** Cap @antelopejs ranges below the next minor on tooling-configs 0.7.1 ([#67](https://github.com/AntelopeJS/interface-auth/pull/67))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli
+
 ## v0.2.1
 
 [compare changes](https://github.com/AntelopeJS/interface-auth/compare/v0.2.0...v0.2.1)
