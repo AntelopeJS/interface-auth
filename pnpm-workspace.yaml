@@ -2,5 +2,6 @@ overrides:
   "@antelopejs/auth-jwt>@antelopejs/interface-auth": "link:."
 allowBuilds:
   lefthook: false
+minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
-  - "@antelopejs/interface-*"
+  - "@antelopejs/*"
